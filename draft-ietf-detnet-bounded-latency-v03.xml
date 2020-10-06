@@ -7,9 +7,9 @@
 <!ENTITY RFC6658 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6658.xml">
 <!ENTITY RFC7806 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7806.xml">
 <!ENTITY RFC8578 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8578.xml">
-<!ENTITY I-D.ietf-detnet-architecture SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-detnet-architecture-08.xml">
-<!ENTITY I-D.ietf-detnet-ip SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-detnet-ip-00.xml">
-<!ENTITY I-D.ietf-detnet-mpls SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-detnet-mpls-00.xml">
+<!ENTITY RFC8655 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8655.xml">
+<!ENTITY I-D.ietf-detnet-ip SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-detnet-ip-05.xml">
+<!ENTITY I-D.ietf-detnet-mpls SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-detnet-mpls-05.xml">
 ]>
 
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -21,7 +21,7 @@
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
 
-<rfc category="info" docName="draft-ietf-detnet-bounded-latency-02" ipr="trust200902">
+<rfc category="info" docName="draft-ietf-detnet-bounded-latency-03" ipr="trust200902">
 
 <!-- ***** FRONT MATTER ***** -->
 
@@ -117,7 +117,7 @@
    </address>
 </author>
 
-<date month="March" day="9" year="2020" />
+<date month="November" day="2" year="2020" />
 
 <area>Routing</area>
 
@@ -151,7 +151,7 @@
         latency bounds can be reliably assured.  Thus, DetNet is an example of an
         IntServ Guaranteed Quality of Service <xref target="RFC2212"/>
     </t><t>
-        As explained in <xref target="I-D.ietf-detnet-architecture"/>, DetNet
+        As explained in <xref target="RFC8655"/>, DetNet
         flows are characterized by 1) a maximum bandwidth, guaranteed either by the
         transmitter or by strict input metering; and 2) a requirement for a
         guaranteed worst-case end-to-end latency.  That latency guarantee,
@@ -186,7 +186,7 @@
 
 <section title="Terminology and Definitions">
     <t>
-	This document uses the terms defined in <xref target="I-D.ietf-detnet-architecture"/>.</t>
+	This document uses the terms defined in <xref target="RFC8655"/>.</t>
 	
 </section>
 
@@ -358,7 +358,7 @@
                     a preemption event.  This delay has two components, the
                     first-bit-out to first-bit-in delay and the first-bit-in to last-bit-in delay
                     that varies with packet size.  The former is typically measured by the Precision Time
-                    Protocol and is constant (see <xref target="I-D.ietf-detnet-architecture"/>).  However,
+                    Protocol and is constant (see <xref target="RFC8655"/>).  However,
                     a virtual "link" could exhibit a variable link delay.</t>
                 <t hangText="3. Preemption delay"><vspace blankLines="0"/>
                     If the packet is interrupted in order to transmit another packet or packets,
@@ -596,14 +596,14 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     
     <t>Then a bound on the backlog of traffic of all classes 
     in the queue at this output port is</t>
-    <t>[[E: The formula is not right; why do we need nb_classes to compute backlog bound?]][[ZJY: Agree with Ehsan]]</t>
+    <!-- <t>[[E: The formula is not right; why do we need nb_classes to compute backlog bound?]][[ZJY: Agree with Ehsan]]</t>
        <t>
          <list style="hanging">
            <t> backlog_bound = ( nb_classes + nb_input_ports ) *  max_packet_length  + total_in_rate* max_delay456 
            </t>
          </list>
        </t>
-    <t>[[E: proposed general backlog bound:]]</t>
+    <t>[[E: proposed general backlog bound:]]</t> -->
        <t>
          <list style="hanging">
            <t> backlog_bound = nb_input_ports *  max_packet_length  + total_in_rate* max_delay456 
@@ -618,7 +618,8 @@ its (flow) regulation constraints; it is released at the earliest time at which 
  
  
  <section anchor="queue_model" title="Queuing techniques">
- 
+ 	<t>In this section, for simplicity of delay computation, we assume that the T-SPEC or arrival curve <xref target="NetCalBook"/> for each flow at source is leaky bucket.
+ 	 Also, at each relay node, the service for each queue is abstracted with a guaranteed rate and a latency.</t>
     <section anchor="data_model" title="Queuing data model">
 
 	<t>Sophisticated queuing mechanisms are available in Layer 3 (L3, see, e.g., <xref target="RFC7806"/> for an overview).
@@ -721,28 +722,24 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     The Class of Service (queue) determines which packets are which.
     Only one layer of preemption is supported -- a transmitter cannot have more than one
     interrupted frame in progress.  DetNet flows typically pass through the interrupting
-    MAC.  [[ZJY: proposed text: For those DetNet flows with T-SPEC, latency bound can be 
-	calculated by the methods provided in the following sections, according to the specific 
-	queuing mechanism that is used in DetNet nodes.]]Best-effort queues pass through the 
+    MAC. For those DetNet flows with T-SPEC, latency bound can be 
+	calculated by the methods provided in the following sections that accounts for the affect of preemption, according to the specific 
+	queuing mechanism that is used in DetNet nodes. Best-effort queues pass through the 
 	interruptible MAC, and can 	thus be preempted.
-    </t>
-	<t>
-		[[ZJY: As a reader to here, I would wonder how to calculate delay bound for those flows 
-		that support preemption. I add a proposed sentence above.]]
-	</t>		
+    </t>	
     </section>
 
     <section anchor="time_schedule_intro" title="Time Aware Shaper">
-		<t>
+		<!-- <t>
 			[[ZJY: I reduced this section for time aware shaper to 2 paragraphs. Look forward for your idea whether we should keep TAS in this level, or just delete it.]]
-		</t>
+		</t> -->
 		<t>
 			In <xref target="IEEE8021Q"/>, the notion of time-scheduling queue gates is
 			described in section 8.6.8.4. On each node, the transmission selection for packets 
-			is controlled by a time-synchronized gate. The operation of gates, are
-			determined by gate control list (GCL), which defines the 
-            gate operation, in open or closed state, with associated timing for each
-            traffic class queue. Since the design of GCL should satisfy the requirement of 
+			is controlled by time-synchronized gates; each output queue is associated with a gate.
+			The gates can be either open or close. The states of the gates are
+			determined by the gate control list (GCL). The GCL specifies the opening and closing
+			times of the gates. Since the design of GCL should satisfy the requirement of 
 			latency upper bounds of all time-sensitive flows, those flows travers a 
 			network should have bounded latency, if the traffic and nodes are conformant.
 		</t>
@@ -755,10 +752,10 @@ its (flow) regulation constraints; it is released at the earliest time at which 
             supports no more than eight traffic classes, typically using up to seven
             priority classes and at least one best effort class.
         </t>
-        <t>
+        <!-- <t>
 			[[ZJY: The following text in this section could be deleted.]]
-		</t>
-		<t>
+		</t> -->
+		<!-- <t>
         In <xref target="IEEE8021Q"/>, the notion of time-scheduling queue gates is
         described in section 8.6.8.4.  Below every output queue (the lower row of queues in
         <xref target="fig_8021Q_data_model"/>) is a gate that permits or denies the
@@ -806,7 +803,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
             (NP-hard) problem. Also, at this writing, scheduled traffic service
             supports no more than eight traffic classes, typically using up to seven
             priority classes and at least one best effort class.
-        </t>
+        </t> -->
     </section>
 	<section anchor="TSNwithATSmodel" title="Credit-Based Shaper with Asynchronous Traffic Shaping">
 <!--         <t>
@@ -1029,10 +1026,11 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         </t>
 		-->
        <t>
-            Consider a IntServ path including many node, where the i-th node  provides a guaranteed rate R_i and maximum service latency of T_i. Similarly, the end-to-end delay bound for a flow on this can be calculated as sum(T_i) + b / min(R_i).
+            Consider an IntServ path including a sequence of nodes, where the i-th node  provides a guaranteed rate R_i and maximum service latency of T_i. Then, the end-to-end delay bound for a flow on this can be calculated as sum(T_i) + b / min(R_i).
         </t>
 		<t>
-			Generally, according to network calculus <xref target="NetCalBook"/>, consider a IntServ flow with arrival curve and a server with service curve, the delay bound can be obtained by the horizontal distance between the arrival curve and the service curve.  
+			If more information about the flow is known, e.g. the peak rate, the delay bound is more complicated; the detail is available in Section 1.4.1 of <xref target="NetCalBook"/>.
+			<!-- Generally, according to network calculus <xref target="NetCalBook"/>, consider a IntServ flow with arrival curve and a server with service curve, the delay bound can be obtained by the horizontal distance between the arrival curve and the service curve.   -->
 		</t>
 <!-- 		
         <t>
@@ -1092,7 +1090,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
              \_____              \_____
                    \_____              \_____  DetNet transit node B
                          \_                  \_ queue assignment, in
-       |                   |            |<-DT->|  port 2 to out 3  |
+       |                   |            |<-DT->|  port 1 to out 2  |
 -------+-------------------+------------+------+-------------------+-
       0.3  time-->        1.3          2.0    2.3                 3.3
       
@@ -1100,7 +1098,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
          to buffer c  --->  VVVVVVVVVVVV
        if dead time not                         window to transfer
           excessive         VVVVVVVVVVVVVVVVVVV <--- to buffer d
-                        DetNet transit node B out port 3
+                        DetNet transit node B out port 2
 |         a         |         b         |         c         |       d
 +-------------------+-------------------+-------------------+--------
 0    time-->        1                   2                   3
@@ -1189,7 +1187,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
 	&RFC6658;
 	&RFC7806;
     &RFC8578;
-	&I-D.ietf-detnet-architecture;
+    &RFC8655;
 	&I-D.ietf-detnet-ip;
     &I-D.ietf-detnet-mpls;
 
@@ -1252,17 +1250,17 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         </front>
 	</reference>
     
-    <reference anchor="NetCalBook" target="https://arxiv.org/abs/1804.10608/">
+    <reference anchor="NetCalBook" target="https://ica1www.epfl.ch/PS_files/NetCal.htm">
         <front>
           <title>Network calculus: a theory of deterministic queuing systems for the internet</title>
           <author>
-            <organization>Le Boudec, Jean-Yves, and Patrick Thiran</organization>
+            <organization>J.-Y. Le Boudec and P. Thiran</organization>
           </author>
           <date year="2001"/>
         </front>
 	</reference>
     
-	<reference anchor="le_boudec_theory_2018" target="http://arxiv.org/abs/1801.08477/">
+	<reference anchor="le_boudec_theory_2018" target="https://ieeexplore.ieee.org/document/8519761">
         <front>
           <title>A Theory of Traffic Regulators for Deterministic Networks with Application to Interleaved Regulators</title>
           <author>
