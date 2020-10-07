@@ -1081,27 +1081,30 @@ its (flow) regulation constraints; it is released at the earliest time at which 
      </t>
          <figure title="CQF timing diagram" anchor="fig_Tc_CQF">
              <artwork><![CDATA[
-0 time -->  0.7     1   (units of T_c)   2                   3
+T_c: cycle time 			DT: dead time
+time is in units of T_c 
+
                         DetNet transit node A out port 1
 |      a      <-DT->|        b          |          c        |       d
-+------------+------+-------------------+-------------------+--------
- \_____              \_____
++------------+------+-------------------+-------------------+-----------> time
+0\_____     0.7     1\_____		2		    3
        \_____              \_____  queue-to-queue delay = 1.3 T_c
              \_____              \_____
                    \_____              \_____  DetNet transit node B
                          \_                  \_ queue assignment, in
        |                   |            |<-DT->|  port 1 to out 2  |
--------+-------------------+------------+------+-------------------+-
-      0.3  time-->        1.3          2.0    2.3                 3.3
+-------+-------------------+------------+------+-------------------+----> time
+      0.3		  1.3          2.0    2.3                 3.3
       
+
       window to transfer
          to buffer c  --->  VVVVVVVVVVVV
        if dead time not                         window to transfer
           excessive         VVVVVVVVVVVVVVVVVVV <--- to buffer d
                         DetNet transit node B out port 2
 |         a         |         b         |         c         |       d
-+-------------------+-------------------+-------------------+--------
-0    time-->        1                   2                   3
++-------------------+-------------------+-------------------+-----------> time
+0		    1                   2                   3
 ]]></artwork>
          </figure>
          <t>
@@ -1126,8 +1129,10 @@ its (flow) regulation constraints; it is released at the earliest time at which 
              of the output time (1) of <xref target="fig_timing_model"/>.  The queue assignments times
              on timeline 3 take place at the beginning of the queuing delay (6) of
              <xref target="fig_timing_model"/>.  Time-based CQF, as described here, does not require
-             any regulator queues.  In the shown in the figure, the total time [[E: what is meant by total time? Does it mean a delay bound is 1.3 T_C?]] [[ZJY: suggest total delay]]for delays (1) through (6)
-             of <xref target="fig_timing_model"/>, is 1.3T_c.  Of course, any value is possible.
+             any regulator queues.  As shown in the figure, the total delay (delays 1,2,3,4,5,6 as in 
+             <xref target="fig_timing_model"/>) is 1.3T_c. [[EM: It cannot be more than T_C. In CQF, 
+             during one cycle time the queue is completely evacuated. So the delay must not exceed T_c. Right? If so, the figure and the corresponding text should be updated.]]
+             <!-- Of course, any value is possible. -->
          </t>
          <section anchor="deadtime" title="CQF timing sequence">
             <t>
@@ -1135,14 +1140,14 @@ its (flow) regulation constraints; it is released at the earliest time at which 
                 do not align perfectly with the windows for buffer transmission.  The input gates (the
                 center timeline in <xref target="fig_Tc_CQF"/>) must switch from using one buffer to
                 using another buffer in sync with the (delayed) received data, at times offset by
-                the dead time from the output buffer switching (the bottom timeline in
+                the dead time DT from the output buffer switching (the bottom timeline in
                 <xref target="fig_Tc_CQF"/>).
             </t><t>
                 If the dead time DT in <xref target="fig_Tc_CQF"/> is not excessive, then it is feasible to subtract the dead time from
-                the cycle time Tc, and use the remainder as the input window.  In the example in
-                <xref target="fig_Tc_CQF"/>, packets from node A buffer a can be transferred from the input port to
+                the cycle time T_c, and use the remainder as the input window.  In the example in
+                <xref target="fig_Tc_CQF"/>, packets from node A buffer "a" can be transferred from the input port to
                 node B's buffer
-                "c" during the window shown by the upper row "VVVV...".  Input must cease by time
+                "c" during the window shown by the upper row "VVVV..." [[EM: proposal to be added: ;meanwhile, node B's buffer "b" is transmitting.]].  Input [[EM: proposal to be added: to the node B's buffer "c" ]] must cease by time
                 = 2.0, because that is when transit node B starts transmitting the contents of buffer c.
                 In this case, only two output buffers are in use, one filling and
                 one outputting.
@@ -1150,20 +1155,37 @@ its (flow) regulation constraints; it is released at the earliest time at which 
                 If the dead time is too large (e.g., if the delays placed the middle timeline's
                 switching points at n+0.9, instead of n+0.3), three buffers are used by node B.  This case is shown
                 by the lower row "VVVV..." in <xref target="fig_Tc_CQF"/>.  In this case, node B
-                places the data received from node A buffer a into node B buffer d between the times
-                1.3 and 2.3 in <xref target="fig_Tc_CQF"/>.  Buffer b starts
-                outputting at time = 2.0, while buffer d is filling.  Thus, three buffers are in
+                places the data received from node A buffer "a" into node B buffer "d" between the times
+                1.3 and 2.3 in <xref target="fig_Tc_CQF"/>.  Buffer "b" starts
+                outputting at time = 2.0, while buffer "d" is filling.  Thus, three buffers are in
                 use, one filling, one waiting, and one emptying.
             </t>
          </section>
          <section title="CQF latency calculation">
          <t>
              The per-hop latency is trivially determined by the wire delay and the queuing delay.
-             Since the wire delay is either absorbed into the queueing delay (dead time is small
-             and two buffers are used) or padded out to a whole cycle time T_c (three buffers are used)
-             the per-hop latency is always an integral number of cycle times T_c, with a latency variation
-             at the output of the final hop of T_c.
-         </t><t>
+             Typically, the wire delay is either absorbed into the queueing delay (dead time is small
+             and two buffers are used) or padded out to a whole cycle time T_c (three buffers are used). 
+         </t>
+         <t>
+         	[[EM: proposal to add: Therefore, a packet transmitted from node A at a cycle tick i, is transmitted from node B at cycle i+1. Hence, the maximum delay experienced by a given packet is from 
+             the beginning of i to the end of i+1, or 2T_c; also, the minimum delay is from the end of cycle tick i to the beginning of cycle tick i+1, i.e., zero. Then, if the packet traverses h hops, the maximum delay is:
+         	<list style="hanging">
+         		<t>(h+1) T_c</t>
+         	</list>
+         </t>
+     	<t> and the minimum delay is:</t>
+     	<t>
+     		<list style="hanging">
+         		<t>(h-1) T_c</t>
+         	</list>
+     	</t>
+     	<t>that gives a latency variation of 2T_c.]]</t>
+     	<t>
+     		[[EM: proposal to remove: the per-hop latency is always an integral number of cycle times T_c, with a latency variation
+             at the output of the final hop of T_c.]]
+     	</t>
+         <t>
              Ingress conditioning (<xref target="ingress"/>) may be required if the source
              of a DetNet flow does not, itself,
              employ CQF.
@@ -1173,6 +1195,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
              except perhaps for ingress checks to see that the transmitter does not exceed the
              contracted bandwidth.
          </t>
+         <t>[[EM: It is not mentioned how the admission control is handled; this affects the value of T_c.]]</t>
          </section>
   </section>
  </section>
