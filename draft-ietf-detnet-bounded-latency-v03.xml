@@ -1159,6 +1159,7 @@ time is in units of T_c
                 1.3 and 2.3 in <xref target="fig_Tc_CQF"/>.  Buffer "b" starts
                 outputting at time = 2.0, while buffer "d" is filling.  Thus, three buffers are in
                 use, one filling, one waiting, and one emptying.
+                [[EM: The reasoning for 3-buffer schema is not mentioned here. How does it make difference comparing with the 2-buffer schema? Also the delay analysis is missing for th 3-buffer schema.]]
             </t>
          </section>
          <section title="CQF latency calculation">
