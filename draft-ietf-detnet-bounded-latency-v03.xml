@@ -1070,15 +1070,48 @@ its (flow) regulation constraints; it is released at the earliest time at which 
  -->		
     </section>
   <section title="Cyclic Queuing and Forwarding" anchor="cqf">
- <t>
+    <t>
          Annex T of <xref target="IEEE8021Q"/> describes Cyclic Queuing
          and Forwarding (CQF), which provides bounded latency and zero congestion loss using
          the time-scheduled gates of <xref target="IEEE8021Q"/> section 8.6.8.4.  For a given DetNet
-         class of service, a set of two or three buffers is provided at the output queue layer of
+         class of service, a set of two or more buffers is provided at the output queue layer of
          <xref target="fig_8021Q_data_model"/>.  A cycle time T_c is configured for each class c, and
          all of the buffer sets in a class swap buffers simultaneously throughout the DetNet domain
-         at that cycle rate, all in phase.
+         at that cycle rate, all in phase. In such a mechanism, the regulators, mentioned in <xref target="fig_timing_model"/>, is not required.
      </t>
+     <t>
+        In the case of two-buffer CQF, each class c, has two buffers, namely buffer1 and buffer2. In a cycle (i) when buffer1 accumulates received packets from the node's reception ports, buffer2 transmits the already stored packets from the previous cycle (i-1). In the next cycle (i+1), buffer2 stores the received packets and buffer1 transmits the packets received in cycle (i). The duration of each cycle is T_c.
+     </t>
+     <t>
+        The per-hop latency is trivially determined by the cycle time T_c: the packet transmitted from a node at a cycle (i), is transmitted from the next node at cycle (i+1). Hence, the maximum delay experienced by a given packet is from 
+         the beginning of cycle (i) to the end of cycle (i+1), or 2T_c; also, the minimum delay is from the end of cycle (i) to the beginning of cycle (i+1), i.e., zero. Then, if the packet traverses h hops, the maximum delay is:
+        <list style="hanging">
+            <t>(h+1) T_c</t>
+        </list>
+     </t>
+    <t> and the minimum delay is:</t>
+    <t>
+        <list style="hanging">
+            <t>(h-1) T_c</t>
+        </list>
+    </t>
+    <t>that gives a latency variation of 2T_c.</t>
+     <t>
+        The cycle length T_c should be carefully chosen, which needs to be large enough to accomodate all the DetNet traffic, plus at least one maximum interfering packet, that can be received within one cycle. Also, the value of T_c includes a time interval, called dead time (DT). The DT guarantees that the last packet of one cycle in a node is fully delivered to a buffer of the next node. The DT is sum of the delays 1,2,3,4 defined in <xref target="fig_timing_model"/>. A two-buffer CQFIf is recommended if DT is small comparing to T_c. For large DT, CQF with more buffers can be used.
+     </t>
+     <t>
+         Ingress conditioning (<xref target="ingress"/>) may be required if the source
+         of a DetNet flow does not, itself,
+         employ CQF.
+     </t><t>
+         Note that there are no per-flow parameters in the CQF technique.  Therefore, there is
+         no requirement for per-hop configuration when a new DetNet flow is added to a network,
+         except perhaps for ingress checks to see that the transmitter does not exceed the
+         contracted bandwidth.
+     </t>
+
+    <t>[[EM: remove the rest of this section.]]</t>
+
          <figure title="CQF timing diagram" anchor="fig_Tc_CQF">
              <artwork><![CDATA[
 T_c: cycle time 			DT: dead time
