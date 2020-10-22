@@ -1077,10 +1077,10 @@ its (flow) regulation constraints; it is released at the earliest time at which 
          class of service, a set of two or more buffers is provided at the output queue layer of
          <xref target="fig_8021Q_data_model"/>.  A cycle time T_c is configured for each class c, and
          all of the buffer sets in a class swap buffers simultaneously throughout the DetNet domain
-         at that cycle rate, all in phase. In such a mechanism, the regulators, mentioned in <xref target="fig_timing_model"/>, is not required.
+         at that cycle rate, all in phase. In such a mechanism, the regulator, mentioned in <xref target="fig_timing_model"/>, is not required.
      </t>
      <t>
-        In the case of two-buffer CQF, each class c, has two buffers, namely buffer1 and buffer2. In a cycle (i) when buffer1 accumulates received packets from the node's reception ports, buffer2 transmits the already stored packets from the previous cycle (i-1). In the next cycle (i+1), buffer2 stores the received packets and buffer1 transmits the packets received in cycle (i). The duration of each cycle is T_c.
+        In the case of two-buffer CQF, each class c has two buffers, namely buffer1 and buffer2. In a cycle (i) when buffer1 accumulates received packets from the node's reception ports, buffer2 transmits the already stored packets from the previous cycle (i-1). In the next cycle (i+1), buffer2 stores the received packets and buffer1 transmits the packets received in cycle (i). The duration of each cycle is T_c.
      </t>
      <t>
         The per-hop latency is trivially determined by the cycle time T_c: the packet transmitted from a node at a cycle (i), is transmitted from the next node at cycle (i+1). Hence, the maximum delay experienced by a given packet is from 
@@ -1097,7 +1097,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     </t>
     <t>that gives a latency variation of 2T_c.</t>
      <t>
-        The cycle length T_c should be carefully chosen, which needs to be large enough to accomodate all the DetNet traffic, plus at least one maximum interfering packet, that can be received within one cycle. Also, the value of T_c includes a time interval, called dead time (DT). The DT guarantees that the last packet of one cycle in a node is fully delivered to a buffer of the next node. The DT is sum of the delays 1,2,3,4 defined in <xref target="fig_timing_model"/>. A two-buffer CQFIf is recommended if DT is small comparing to T_c. For large DT, CQF with more buffers can be used.
+        The cycle length T_c should be carefully chosen, which needs to be large enough to accomodate all the DetNet traffic, plus at least one maximum interfering packet, that can be received within one cycle. Also, the value of T_c includes a time interval, called dead time (DT). The DT guarantees that the last packet of one cycle in a node is fully delivered to a buffer of the next node. The DT is sum of the delays 1,2,3,4 defined in <xref target="fig_timing_model"/>. A two-buffer CQF is recommended if DT is small comparing to T_c. For large DT, CQF with more buffers can be used.
      </t>
      <t>
          Ingress conditioning (<xref target="ingress"/>) may be required if the source
@@ -1110,36 +1110,9 @@ its (flow) regulation constraints; it is released at the earliest time at which 
          contracted bandwidth.
      </t>
 
-    <t>[[EM: remove the rest of this section.]]</t>
+<!--     <t>[[EM: remove the rest of this section.]]</t>
 
-         <figure title="CQF timing diagram" anchor="fig_Tc_CQF">
-             <artwork><![CDATA[
-T_c: cycle time 			DT: dead time
-time is in units of T_c 
-
-                        DetNet transit node A out port 1
-|      a      <-DT->|        b          |          c        |       d
-+------------+------+-------------------+-------------------+-----------> time
-0\_____     0.7     1\_____		2		    3
-       \_____              \_____  queue-to-queue delay = 1.3 T_c
-             \_____              \_____
-                   \_____              \_____  DetNet transit node B
-                         \_                  \_ queue assignment, in
-       |                   |            |<-DT->|  port 1 to out 2  |
--------+-------------------+------------+------+-------------------+----> time
-      0.3		  1.3          2.0    2.3                 3.3
-      
-
-      window to transfer
-         to buffer c  --->  VVVVVVVVVVVV
-       if dead time not                         window to transfer
-          excessive         VVVVVVVVVVVVVVVVVVV <--- to buffer d
-                        DetNet transit node B out port 2
-|         a         |         b         |         c         |       d
-+-------------------+-------------------+-------------------+-----------> time
-0		    1                   2                   3
-]]></artwork>
-         </figure>
+         
          <t>
              <xref target="fig_Tc_CQF"/> shows two DetNet transit nodes A and B, including three timelines for:
          </t>
@@ -1165,9 +1138,8 @@ time is in units of T_c
              any regulator queues.  As shown in the figure, the total delay (delays 1,2,3,4,5,6 as in 
              <xref target="fig_timing_model"/>) is 1.3T_c. [[EM: It cannot be more than T_C. In CQF, 
              during one cycle time the queue is completely evacuated. So the delay must not exceed T_c. Right? If so, the figure and the corresponding text should be updated.]]
-             <!-- Of course, any value is possible. -->
-         </t>
-         <section anchor="deadtime" title="CQF timing sequence">
+         </t> -->
+         <!-- <section anchor="deadtime" title="CQF timing sequence">
             <t>
                 In general, as shown in <xref target="fig_Tc_CQF"/>, the windows for buffer assignment
                 do not align perfectly with the windows for buffer transmission.  The input gates (the
@@ -1194,8 +1166,8 @@ time is in units of T_c
                 use, one filling, one waiting, and one emptying.
                 [[EM: The reasoning for 3-buffer schema is not mentioned here. How does it make difference comparing with the 2-buffer schema? Also the delay analysis is missing for th 3-buffer schema.]]
             </t>
-         </section>
-         <section title="CQF latency calculation">
+         </section> -->
+         <!-- <section title="CQF latency calculation">
          <t>
              The per-hop latency is trivially determined by the wire delay and the queuing delay.
              Typically, the wire delay is either absorbed into the queueing delay (dead time is small
@@ -1230,7 +1202,7 @@ time is in units of T_c
              contracted bandwidth.
          </t>
          <t>[[EM: It is not mentioned how the admission control is handled; this affects the value of T_c.]]</t>
-         </section>
+         </section> -->
   </section>
  </section>
 </middle>
