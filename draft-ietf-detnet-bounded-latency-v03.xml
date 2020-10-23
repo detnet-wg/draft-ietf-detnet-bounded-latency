@@ -82,7 +82,7 @@
     </organization>
     <address>
         <postal>
-            <street>Q22, No.156 Beiqing Road</street>
+            <street>Q27, No.156 Beiqing Road</street>
             <city>Beijing</city>
             <code>100095</code>
             <country>China</country>
@@ -1097,17 +1097,12 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     </t>
     <t>that gives a latency variation of 2T_c.</t>
      <t>
-        The cycle length T_c should be carefully chosen, which needs to be large enough to accomodate all the DetNet traffic, plus at least one maximum interfering packet, that can be received within one cycle. Also, the value of T_c includes a time interval, called dead time (DT). The DT guarantees that the last packet of one cycle in a node is fully delivered to a buffer of the next node. The DT is sum of the delays 1,2,3,4 defined in <xref target="fig_timing_model"/>. A two-buffer CQF is recommended if DT is small comparing to T_c. For large DT, CQF with more buffers can be used.
+        The cycle length T_c should be carefully chosen, which needs to be large enough to accomodate all the DetNet traffic, plus at least one maximum interfering packet, that can be received within one cycle. Also, the value of T_c includes a time interval, called dead time (DT). The DT is sum of the delays 1,2,3,4 defined in <xref target="fig_timing_model"/>. The DT guarantees that the last packet of one cycle in a node is fully delivered to a buffer of the next node. A two-buffer CQF is recommended if DT is small comparing to T_c. For large DT, CQF with more buffers can be used.
      </t>
      <t>
-         Ingress conditioning (<xref target="ingress"/>) may be required if the source
-         of a DetNet flow does not, itself,
-         employ CQF.
-     </t><t>
-         Note that there are no per-flow parameters in the CQF technique.  Therefore, there is
-         no requirement for per-hop configuration when a new DetNet flow is added to a network,
-         except perhaps for ingress checks to see that the transmitter does not exceed the
-         contracted bandwidth.
+         When a new DetNet flow is added to a network, ingress conditioning (<xref target="ingress"/>) would be required if the source
+         of a DetNet flow does not, itself, employ CQF, which checks the transmittting flow does not violate the TSPEC.
+	 Since there are no per-flow parameters in the CQF technique, per-hop configuration is not required in the CQF forwarding nodes.
      </t>
 
 <!--     <t>[[EM: remove the rest of this section.]]</t>
