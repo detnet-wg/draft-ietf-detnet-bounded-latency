@@ -1095,13 +1095,13 @@ its (flow) regulation constraints; it is released at the earliest time at which 
             <t>(h-1) T_c</t>
         </list>
     </t>
-    <t>that gives a latency variation of 2T_c.</t>
+    <t>which gives a latency variation of 2T_c.</t>
      <t>
-        The cycle length T_c should be carefully chosen, which needs to be large enough to accomodate all the DetNet traffic, plus at least one maximum interfering packet, that can be received within one cycle. Also, the value of T_c includes a time interval, called dead time (DT). The DT is sum of the delays 1,2,3,4 defined in <xref target="fig_timing_model"/>. The DT guarantees that the last packet of one cycle in a node is fully delivered to a buffer of the next node. A two-buffer CQF is recommended if DT is small comparing to T_c. For large DT, CQF with more buffers can be used.
+        The cycle length T_c should be carefully chosen; it needs to be large enough to accomodate all the DetNet traffic, plus at least one maximum interfering packet, that can be received within one cycle. Also, the value of T_c includes a time interval, called dead time (DT), which is the sum of the delays 1,2,3,4 defined in <xref target="fig_timing_model"/>. The value of DT guarantees that the last packet of one cycle in a node is fully delivered to a buffer of the next node is the same cycle. A two-buffer CQF is recommended if DT is small compared to T_c. For a large DT, CQF with more buffers can be used.
      </t>
      <t>
-         Ingress conditioning (<xref target="ingress"/>) would be required if the source
-         of a DetNet flow does not, itself, employ CQF, when a new DetNet flow is added to the netowrk. The ingress node checks the transmitted flow does not violate the TSPEC.
+         When a new DetNet flow is added to a network, ingress conditioning (<xref target="ingress"/>) would be required if the source
+         of a DetNet flow does not, itself, employ CQF, which checks the transmitting flow does not violate the TSPEC.
 	 Since there are no per-flow parameters in the CQF technique, per-hop configuration is not required in the CQF forwarding nodes.
      </t>
 
