@@ -200,7 +200,7 @@
                 <t>
                     Perform any configuration required by the DetNet transit nodes in the network for the
                     classes of service to be offered, including one or more classes of
-                    DetNet service.  This configuration is done beforehand, and not tied to
+                    DetNet flows.  This configuration is done beforehand, and not tied to
                     any particular flow.
                 </t><t>
                     Characterize the new DetNet flow, particularly in terms of required bandwidth.
@@ -337,8 +337,7 @@
                 3: Preemption delay   6: Queuing delay.
                 ]]></artwork>
             </figure>
-            <t>In <xref target="fig_timing_model"/>, we see two DetNet transit nodes (typically, bridges
-                or routers), with a wired link between them.  In this model, the only queues, that we deal
+            <t>In <xref target="fig_timing_model"/>, we see two DetNet transit nodes, with a wired link between them. In this model, the only queues, that we deal
                 with explicitly, are attached to the output port; other queues are modeled as variations
                 in the other delay times.  (E.g., an input queue could be modeled as either a variation
                 in the link delay [2] or the processing delay [4].)  There are six delays that a packet
@@ -508,7 +507,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
             A sender can be a DetNet node which uses exactly the same queuing methods
             as its adjacent DetNet transit node, so that the delay and buffer bounds calculations
             at the first hop are indistinguishable from those at a later hop within the
-            DetNet domain.  On the other hand, the sender may be DetNet unaware, in which
+            DetNet domain.  On the other hand, the sender may be DetNet-unaware, in which
             case some conditioning of the flow may be necessary at the ingress DetNet transit
             node.
         </t><t>
@@ -521,21 +520,21 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     </section>
     <section title="Interspersed non-DetNet transit nodes" anchor="non-detnet-nodes">
         <t>
-            It is sometimes desirable to build a network that has both DetNet aware
-            transit nodes and DetNet non-aware transit nodes, and for a DetNet flow to
-            traverse an island of non-DetNet transit nodes, while still allowing the
+            It is sometimes desirable to build a network that has both DetNet-aware
+            transit nodes and DetNet-uaware transit nodes, and for a DetNet flow to
+            traverse an island of DetNet-unaware transit nodes, while still allowing the
             network to offer delay and congestion loss guarantees.  This is possible
             under certain conditions.
         </t><t>
-            In general, when passing through a non-DetNet island, the island causes
+            In general, when passing through a DetNet-unaware island, the island causes
             delay variation in excess of what would be caused by DetNet nodes.  That
-            is, the DetNet flow is "lumpier" after traversing the non-DetNet island.
+            is, the DetNet flow is "lumpier" after traversing the DetNet-unaware island.
             DetNet guarantees for delay and buffer requirements can still be
             calculated and met if and only if the following are true:
         </t><t>
             <list style="numbers">
                 <t>
-                    The latency variation across the non-DetNet island must be
+                    The latency variation across the DetNet-unaware island must be
                     bounded and calculable.
                 </t><t>
                     An ingress conditioning function (<xref target="ingress"/>)
@@ -548,9 +547,9 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         </t><t>
             The ingress conditioning is exactly the same problem as that of a sender
             at the edge of the DetNet domain.  The requirement for bounds on the
-            latency variation across the non-DetNet island is typically the most
+            latency variation across the DetNet-unaware island is typically the most
             difficult to achieve.  Without such a bound, it is obvious that DetNet
-            cannot deliver its guarantees, so a non-DetNet island that cannot
+            cannot deliver its guarantees, so a DetNet-unaware island that cannot
             offer bounded latency variation cannot be used to carry a DetNet flow.
         </t>
     </section>
