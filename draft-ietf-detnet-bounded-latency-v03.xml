@@ -332,12 +332,12 @@
    +-------------------------+       +------------------------+
    |<->|<------>|<------->|<->|<---->|<->|<------>|<------>|<->|<--
 2,3  4      5        6      1    2,3   4      5        6     1   2,3
-                1: Output delay       4: Processing delay
-                2: Link delay         5: Regulation delay
-                3: Preemption delay   6: Queuing delay.
+                1: Output delay             4: Processing delay
+                2: Link delay               5: Regulation delay
+                3: Frame preemption delay   6: Queuing delay
                 ]]></artwork>
             </figure>
-            <t>In <xref target="fig_timing_model"/>, we see two DetNet transit nodes, with a wired link between them. In this model, the only queues, that we deal
+            <t>In <xref target="fig_timing_model"/>, we see two DetNet transit nodes that are connected via a link. In this model, the only queues, that we deal
                 with explicitly, are attached to the output port; other queues are modeled as variations
                 in the other delay times.  (E.g., an input queue could be modeled as either a variation
                 in the link delay [2] or the processing delay [4].)  There are six delays that a packet
@@ -355,12 +355,12 @@
                 <t hangText="2. Link delay"><vspace blankLines="0"/>
                     The time taken from the transmission of the first bit of the packet to the
                     reception of the last bit, assuming that the transmission is not suspended by
-                    a preemption event.  This delay has two components, the
+                    a frame preemption event.  This delay has two components, the
                     first-bit-out to first-bit-in delay and the first-bit-in to last-bit-in delay
                     that varies with packet size.  The former is typically measured by the Precision Time
                     Protocol and is constant (see <xref target="RFC8655"/>).  However,
                     a virtual "link" could exhibit a variable link delay.</t>
-                <t hangText="3. Preemption delay"><vspace blankLines="0"/>
+                <t hangText="3. Frame preemption delay"><vspace blankLines="0"/>
                     If the packet is interrupted in order to transmit another packet or packets,
                     (e.g. <xref target="IEEE8023"/> clause 99 frame preemption)
                     an arbitrary delay can result.</t>
@@ -518,7 +518,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
             in the sections, below, describing those queuing methods.
         </t>
     </section>
-    <section title="Interspersed non-DetNet transit nodes" anchor="non-detnet-nodes">
+    <section title="Interspersed DetNet-unaware transit nodes" anchor="non-detnet-nodes">
         <t>
             It is sometimes desirable to build a network that has both DetNet-aware
             transit nodes and DetNet-uaware transit nodes, and for a DetNet flow to
@@ -526,9 +526,9 @@ its (flow) regulation constraints; it is released at the earliest time at which 
             network to offer delay and congestion loss guarantees.  This is possible
             under certain conditions.
         </t><t>
-            In general, when passing through a DetNet-unaware island, the island causes
+            In general, when passing through a DetNet-unaware island, the island may cause
             delay variation in excess of what would be caused by DetNet nodes.  That
-            is, the DetNet flow is "lumpier" after traversing the DetNet-unaware island.
+            is, the DetNet flow might be "lumpier" after traversing the DetNet-unaware island.
             DetNet guarantees for delay and buffer requirements can still be
             calculated and met if and only if the following are true:
         </t><t>
@@ -538,7 +538,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
                     bounded and calculable.
                 </t><t>
                     An ingress conditioning function (<xref target="ingress"/>)
-                    may be required at the re-entry to the DetNet-aware domain.
+                    is required at the re-entry to the DetNet-aware domain.
                     This will, at least, require some extra buffering to accommodate
                     the additional delay variation, and thus further increases the
                     delay bound.
@@ -574,7 +574,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     <t>
     The backlog bound is counted in data units (bytes, or words of multiple bytes) that are relevant for buffer allocation.     
     For every class we need one buffer space for the packet in transmission, plus space for the packets that are waiting to be selected for output.
-    Excluding transmission and preemption times, the packets are waiting in the queue since reception of the last bit, for a duration
+    Excluding transmission and frame preemption times, the packets are waiting in the queue since reception of the last bit, for a duration
     equal to the processing delay (4) plus the queuing delays (5,6). 
     </t>
     <t>Let 
@@ -712,18 +712,18 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     </t>
 
     </section>
-    <section anchor="preempt_intro" title="Preemption">
+    <section anchor="preempt_intro" title="Frame Preemption">
         <t>
     In <xref target="IEEE8021Q"/> and <xref target="IEEE8023"/>, the transmission of a frame
     can be interrupted by one or more "express" frames, and then the interrupted frame can
-    continue transmission.  This frame preemption is modeled as
+    continue transmission.  The frame preemption is modeled as
     consisting of two MAC/PHY stacks, one for packets that
     can be interrupted, and one for packets that can interrupt the interruptible packets.
     The Class of Service (queue) determines which packets are which.
-    Only one layer of preemption is supported -- a transmitter cannot have more than one
+    Only one layer of frame preemption is supported -- a transmitter cannot have more than one
     interrupted frame in progress.  DetNet flows typically pass through the interrupting
     MAC. For those DetNet flows with T-SPEC, latency bound can be 
-	calculated by the methods provided in the following sections that accounts for the affect of preemption, according to the specific 
+	calculated by the methods provided in the following sections that accounts for the affect of frame preemption, according to the specific 
 	queuing mechanism that is used in DetNet nodes. Best-effort queues pass through the 
 	interruptible MAC, and can 	thus be preempted.
     </t>	
