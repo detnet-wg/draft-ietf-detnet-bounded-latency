@@ -21,7 +21,7 @@
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
 
-<rfc category="info" docName="draft-ietf-detnet-bounded-latency-02" ipr="trust200902">
+<rfc category="info" docName="draft-ietf-detnet-bounded-latency-03" ipr="trust200902">
 
 <!-- ***** FRONT MATTER ***** -->
 
@@ -117,7 +117,7 @@
    </address>
 </author>
 
-<date month="November" day="2" year="2020" />
+<date month="February" day="24" year="2021" />
 
 <area>Routing</area>
 
@@ -126,12 +126,13 @@
 <keyword>DetNet, bounded latency, zero congestion loss</keyword>
 
 <abstract>
-    <t>This document presents a timing model for Deterministic Networking
+    <!-- <t>This document presents a timing model for Deterministic Networking
         (DetNet), so that existing and future standards can achieve the DetNet quality of
         service features of bounded latency and zero congestion loss.  It defines requirements
         for resource reservation protocols or servers.  It calls out queuing mechanisms,
         defined in other documents, that can provide the DetNet quality of service.
-    </t>
+    </t> -->
+    <t>This document references specific queuing mechanisms, defined in other documents, that can be used to control packet transmission at each output port and achieve the DetNet qualities of service. This document presents a timing model for sources, destinations, and the DetNet transit nodes that relay packets that is applicable to all of those referenced queuing mechanisms. Using the model presented in this document, it should be possible for an implementor, user, or standards development organization to select a particular set of queuing mechanisms for each device in a DetNet network, and to select a resource reservation algorithm for that network, so that those elements can work together to provide the DetNet service.</t>
 </abstract>
 </front>
 
@@ -227,7 +228,7 @@
             central server.  In some situations, a lack of resources can require
             backtracking and recursing through this list.
         </t><t>
-            Issues such as un-provisioning a DetNet flow in favor of another, when
+            Issues such as service preemption of a DetNet flow in favor of another, when
             resources are scarce, are not considered, here. Also not addressed is the question of
             how to choose the path to be taken by a DetNet flow.
         </t>
@@ -813,9 +814,9 @@ its (flow) regulation constraints; it is released at the earliest time at which 
 			referred to AVB flows. It is assumed a subset of TSN functions as described next.
     	</t> -->
         <t>
-            In the cosidered queuing model, there are four types of flows, namely, control-data traffic (CDT),
+            In the considered queuing model, there are four types of flows, namely, control-data traffic (CDT),
             class A, class B, and best effort (BE) in decreasing order of priority. Flows of classes A and B are together
-            referred to AVB flows. This model is a subset of Time-Sensitive Networking as described next.
+            referred as AVB flows. This model is a subset of Time-Sensitive Networking as described next.
         </t>
 <!-- 		<t>
 			It is also assumed that contention occurs only at the output port of a TSN node. Each node output port performs per-class 

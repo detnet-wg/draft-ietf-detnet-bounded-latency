@@ -1100,7 +1100,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
      	</t>
      	<t>that gives a latency variation of 2T_c.]]</t>
 	<t>
-		[[ZJY: proposal to add: The cycle length T_c should be carefully chosen, which needs be large enough to accomodate all the DetNet traffic that need to be trasmitted within a cycle. For two buffer implementation, it also needs to considered the sum of delay 1,2,3,4 defined in <xref target="timing_model"/> between two neighboured DetNet nodes, which causes offset between the arrival of frames and the start of a cycle. This offset is named 'dead time' DT when frames cannot be transmitted otherwise the frames would be discarded due to the buffer switching.
+		[[ZJY: proposal to add: The cycle length T_c should be carefully chosen, which needs be large enough to accomodate all the DetNet traffic that need to be trasmitted within a cycle. For two buffer implementation, it also needs to considered the sum of delay 1,2,3,4 defined in <xref target="relay_model"/> between two neighboured DetNet nodes, which causes offset between the arrival of frames and the start of a cycle. This offset is named 'dead time' DT when frames cannot be transmitted otherwise the frames would be discarded due to the buffer switching.
 	</t>
 	<t>
 		[[ZJY: Here goes the delay result, the paragraph that Ehsan just added in 6.6.2]]
