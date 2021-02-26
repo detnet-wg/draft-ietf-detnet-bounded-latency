@@ -428,7 +428,7 @@
         queuing_delay_bound is less than the
         sum of upper bounds on the queuing delays (5,6)
         at every
-        hop.  This occurs with (1) per-flow queuing, and (2) per-class queuing with regulators, as explained in <xref target="perflow"/>, <xref target="perclass"/>, and <xref target="queue_model"/>.
+        hop.  This occurs with (1) per-flow queuing, and (2) aggregate queuing with regulators, as explained in <xref target="perflow"/>, <xref target="perclass"/>, and <xref target="queue_model"/>.
         </t>
     
     <t>For other queuing mechanisms the only available value of queuing_delay_bound
@@ -442,16 +442,16 @@
 			</t>
 		</section>
 
-		<section title="Per-class queuing mechanisms" anchor="perclass">
+		<section title="Aggregate queuing mechanisms" anchor="perclass">
 		    <t>
-				With such mechanisms, the flows are aggregated in terms of classes and then the flows of the same class share the same queue. A practical example is the credit-based shaper defined in section 8.6.8.2 of <xref target="IEEE8021Q"/>.  One key issue in this context is how to deal with the burstiness cascade: individual flows that share a resource dedicated to a class may see their burstiness increase, which may in turn cause increased burstiness to other flows downstream of this resource. Computing delay upper bounds for such cases is difficult, and in some conditions impossible <xref target="charny2000delay"/><xref target="bennett2002delay"/>. Also, when bounds are obtained, they depend on the complete configuration, and must be recomputed when one flow is added. (The dynamic calculation, <xref target="dynamic-calculation"/>.)
+				With such mechanisms, multiple flows are aggregated into macro-flows and there is one FIFO queue per macro-flow. A practical example is the credit-based shaper defined in section 8.6.8.2 of <xref target="IEEE8021Q"/> where a macro-flow is called a "class".  One key issue in this context is how to deal with the burstiness cascade: individual flows that share a resource dedicated to a macro-flow may see their burstiness increase, which may in turn cause increased burstiness to other flows downstream of this resource. Computing delay upper bounds for such cases is difficult, and in some conditions impossible <xref target="charny2000delay"/><xref target="bennett2002delay"/>. Also, when bounds are obtained, they depend on the complete configuration, and must be recomputed when one flow is added. (The dynamic calculation, <xref target="dynamic-calculation"/>.)
 			</t>
 			<t>
-				A solution to deal with this issue for the DetNet flows is to reshape them at every hop. This can be done with per-flow regulators (e.g. leaky bucket shapers), but this requires per-flow queuing and defeats the purpose of per-class queuing. An alternative is the interleaved regulator, which reshapes individual DetNet flows without per-flow queuing (<xref target="Specht2016UBS"/>, <xref target="IEEE8021Qcr"/>). With  an interleaved regulator, the packet at the head of the queue is regulated based on
+				A solution to deal with this issue for the DetNet flows is to reshape them at every hop. This can be done with per-flow regulators (e.g. leaky bucket shapers), but this requires per-flow queuing and defeats the purpose of aggregate queuing. An alternative is the interleaved regulator, which reshapes individual DetNet flows without per-flow queuing (<xref target="Specht2016UBS"/>, <xref target="IEEE8021Qcr"/>). With  an interleaved regulator, the packet at the head of the queue is regulated based on
 its (flow) regulation constraints; it is released at the earliest time at which this is possible without violating the constraint. One key feature of per-flow or interleaved regulator is that, it does not increase worst-case latency bounds <xref target="le_boudec2018theory"/>. Specifically, when an interleaved regulator is appended to a FIFO subsystem, it does not increase the worst-case delay of the latter. 
 			</t>
 			<t>
-				<xref target="fig_detnet_e2e_example"/> shows an example of a network with 5 nodes, per-class queuing mechanism and interleaved regulators as in <xref target="fig_timing_model"/>. 
+				<xref target="fig_detnet_e2e_example"/> shows an example of a network with 5 nodes, aggregate queuing mechanism and interleaved regulators as in <xref target="fig_timing_model"/>. 
 				An end-to-end delay bound for DetNet flow f, traversing nodes 1 to 5, is calculated as follows:
 			</t>
 			<t>
@@ -552,29 +552,28 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     </t>
     
     <t>
-    The backlog bound is counted in data units (bytes, or words of multiple bytes) that are relevant for buffer allocation.     
-    For every class, we need one buffer space for the packet in transmission, plus space for the packets that are waiting to be selected for output.
+    The backlog bound is counted in data units (bytes, or words of multiple bytes) that are relevant for buffer allocation. Based on the que
+    For every flow or an aggregate of flows, we need one buffer space for the packet in transmission, plus space for the packets that are waiting to be selected for output.
     Excluding transmission and frame preemption times, the packets are waiting in the queue since reception of the last bit, for a duration
     equal to the processing delay (4) plus the queuing delays (5,6). 
     </t>
     <t>Let 
     <list style="symbols">
-    <t> total_in_rate be the sum of the line rates of all input ports that send traffic of any class to this output port. The value of total_in_rate
+    <t> total_in_rate be the sum of the line rates of all input ports that send traffic to this output port. The value of total_in_rate
     is in data units (e.g. bytes) per second. 
     </t>
-    <t>nb_input_ports be the number input ports that send traffic of any class to this output port</t>
-    <t>max_packet_length be the maximum packet size for packets of any class that may be sent to this output port. This is counted in data units.
+    <t>nb_input_ports be the number input ports that send traffic to this output port</t>
+    <t>max_packet_length be the maximum packet size for packets that may be sent to this output port. This is counted in data units.
     </t>
-    <t>max_delay456 be an upper bound, in seconds, on the sum of the processing delay (4) and the queuing delays (5,6) for a packet
-    of any class at this output port.
+    <t>max_delay456 be an upper bound, in seconds, on the sum of the processing delay (4) and the queuing delays (5,6) for any packet
+     at this output port.
     </t>
     
     </list>      
     </t>
     
     
-    <t>Then a bound on the backlog of traffic of all classes 
-    in the queue at this output port is</t>
+    <t>Then a bound on the backlog of traffic in the queue at this output port is</t>
        <t>
          <list style="hanging">
            <t> backlog_bound = nb_input_ports *  max_packet_length  + total_in_rate* max_delay456 
@@ -599,8 +598,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         needed in a network carrying both DetNet flows and non-DetNet flows.
     </t>
     <t><xref target="fig_8021Q_data_model"/> shows the general model for the flow of packets through
-    the queues of a DetNet transit node.  Packets are assigned to a class (<xref target="perclass"/>).  The classes of DetNet flows are mapped to some number of regulator queues; only DetNet packets pass through
-    regulators.  Queues compete for the selection of packets
+    the queues of a DetNet transit node. The DetNet packets are mapped to a number of regulators. All Packets are assigned to a set of queues.  Queues compete for the selection of packets
     to be passed to queues in the queuing subsystem. Packets again are selected for output from the
     queuing subsystem.
     </t>
@@ -608,7 +606,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         <artwork align="center"><![CDATA[
                                  |
 +--------------------------------V----------------------------------+
-|                          Class assignment                         |
+|                          Queue assignment                         |
 +--+------+----------+---------+-----------+-----+-------+-------+--+
    |      |          |         |           |     |       |       |
 +--V-+ +--V-+     +--V--+   +--V--+     +--V--+  |       |       |
@@ -629,8 +627,9 @@ its (flow) regulation constraints; it is released at the earliest time at which 
            |                      |              |       |       |
 +----------V----------------------V--------------V-------V-------V--+
 |                      Transmission selection                       |
-+-------------------------------------------------------------------+
-
++---------------------------------+---------------------------------+
+                                  |
+                                  V
 ]]></artwork>
     </figure>
     <t>Some relevant mechanisms are hidden in this figure, and are performed in the
@@ -647,12 +646,12 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         for DetNet packets should occur only when a DetNet flow is misbehaving, and the DetNet
         QoS does not include "yellow" service for packets in excess of committed rate.
     </t><t>
-        The class assignment function can be quite complex, even in a
+        The queue assignment function can be quite complex, even in a
         bridge <xref target="IEEE8021Q"/>, since the
         introduction of per-stream filtering and policing (<xref target="IEEE8021Q"/> clause 8.6.5.1).
         In addition to the Layer 2 priority
         expressed in the 802.1Q VLAN tag, a DetNet transit node can utilize any of the following
-        information to assign a packet to a particular class (queue):
+        information to assign a packet to a particular queue:
         <list style="symbols">
             <t>
                 Input port.
@@ -664,7 +663,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
                 (<xref target="RFC8939"/>, <xref target="RFC8964"/>)
                 (Work items are expected to add MPC and other indicators.)
             </t><t>
-                The class assignment function can contain metering and policing
+                The queue assignment function can contain metering and policing
                 functions.
             </t><t>
                 MPLS and/or pseudowire (<xref target="RFC6658"/>) labels.
@@ -683,7 +682,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     continue transmission.  The frame preemption is modeled as
     consisting of two MAC/PHY stacks, one for packets that
     can be interrupted, and one for packets that can interrupt the interruptible packets.
-    The class (queue) determines which packets are which.
+    <!-- The class (queue) determines which packets are which. -->
     Only one layer of frame preemption is supported -- a transmitter cannot have more than one
     interrupted frame in progress.  DetNet flows typically pass through the interrupting
     MAC. For those DetNet flows with T-SPEC, latency bound can be 
@@ -710,19 +709,20 @@ its (flow) regulation constraints; it is released at the earliest time at which 
             nodes in network is a scheduling problem considering all DetNet flows
             traversing the network, which is a non-deterministic polynomial-time hard
             (NP-hard) problem. Also, at this writing, scheduled traffic service
-            supports no more than eight traffic classes, typically using up to seven
-            priority classes and at least one best effort class.
+            supports no more than eight traffic queues, typically using up to seven
+            priority queues and at least one best effort.
         </t>
     </section>
 	<section anchor="TSNwithATSmodel" title="Credit-Based Shaper with Asynchronous Traffic Shaping">
         <t>
-            In the considered queuing model, the flows are classified into four types, namely, control-data traffic (CDT),
+            In the considered queuing model, we considered the four traffic classes (Definition 3.268 of <xref target="IEEE8021Q"/>): 
+            <!-- In the considered queuing model, the flows are of four types, namely,  -->
+            control-data traffic (CDT),
             class A, class B, and best effort (BE) in decreasing order of priority. Flows of classes A and B are together
             referred as AVB flows. This model is a subset of Time-Sensitive Networking as described next.
         </t>
         <t>
-            Based on the timing model described in <xref target="fig_timing_model"/>, the contention occurs only at the output port of a DetNet transit node; therefore, the focus of the rest of this subsection is on the regulator and queuing subsystem in the output port of a DetNet transit node. The output port performs per-class scheduling with eight classes (queuing subsystems): one for CDT, one for class A traffic, one for class B traffic, and five for BE traffic 
-            denoted as BE0-BE4. The queuing policy for each queuing subsystem is FIFO. In addition, each node output port also performs per-flow regulation for 
+            Based on the timing model described in <xref target="fig_timing_model"/>, the contention occurs only at the output port of a DetNet transit node; therefore, the focus of the rest of this subsection is on the regulator and queuing subsystem in the output port of a DetNet transit node. Then, the input flows are identified using the information in (Section 5.1 of <xref target="RFC8939"/>). Then they are aggregated into eight macro flows based on their traffic classes. We refer to each macro flow as a class. The output port performs aggregate scheduling with eight queues (queuing subsystems): one for CDT, one for class A flows, one for class B flows, and five for BE traffic denoted as BE0-BE4. The queuing policy for each queuing subsystem is FIFO. In addition, each node output port also performs per-flow regulation for 
             AVB flows using an interleaved regulator (IR), called Asynchronous Traffic Shaper <xref target="IEEE8021Qcr"/>. Thus, at each output port of a node, there is one interleaved regulator per-input 
             port and per-class; the interleaved regulator is mapped to the regulator depicted in <xref target="fig_timing_model"/>. The detailed picture of scheduling and regulation architecture at a node output port is given by <xref target="fig_TSN_node"/>. The packets received at a node input port for a given class are enqueued in the respective interleaved regulator at the output port.
             Then, the packets from all the flows, including CDT and BE flows, are enqueued in queuing subsytem; there is no regulator for such classes.
