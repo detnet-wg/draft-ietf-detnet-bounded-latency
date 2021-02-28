@@ -10,6 +10,7 @@
 <!ENTITY RFC8655 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8655.xml">
 <!ENTITY RFC8939 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8939.xml">
 <!ENTITY RFC8964 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8964.xml">
+<!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
 <!ENTITY I-D.ietf-detnet-ip SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-detnet-ip-05.xml">
 <!ENTITY I-D.ietf-detnet-mpls SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-detnet-mpls-05.xml">
 <!ENTITY I-D.ietf-detnet-security SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-detnet-security-13.xml">
@@ -120,7 +121,7 @@
    </address>
 </author>
 
-<date month="February" day="24" year="2021" />
+<date month="March" day="1" year="2021" />
 
 <area>Routing</area>
 
@@ -904,7 +905,16 @@ its (flow) regulation constraints; it is released at the earliest time at which 
 
 <section title="Security considerations">
     <t>
-    Detailed security considerations for DetNet are cataloged in <xref target="I-D.ietf-detnet-security"/>, and more general security considerations are described in <xref target="RFC8655"/>. [[E:not yet compelete.]]
+    Detailed security considerations for DetNet are cataloged in <xref target="I-D.ietf-detnet-security"/>, and more general security considerations are described in <xref target="RFC8655"/>.
+    </t>
+    <t>
+        Security aspects that are unique to DetNet are those whose aim is to provide the specific QoS aspects of DetNet, specifically bounded end-to-end delivery latency and zero congestion loss. Achieving such loss rates and bounded latency may not be possible in the face of a highly capable adversary, such as the one envisioned by the Internet Threat Model of BCP 72 <xref target="RFC3552"/> that can arbitrarily drop or delay any or all traffic. In order to present meaningful security considerations, we consider a somewhat weaker attacker who does not control the physical links of the DetNet domain but may have the ability to control a network node within the boundary of the DetNet domain.
+    </t>
+    <t>
+        A security consideration for this document is to secure the resource reservation singaling for DetNet flows. Any forge or manipulation of packets during reservation may lead the flow not to be admitted or face delay bound violation. Security mitigation for this issue is describedd in Section 7.6 of <xref target="I-D.ietf-detnet-security"/>.
+    </t>
+    <t>
+        Another consideration is regarding the configuration of regulators is to account for clock inaccuracies thoughout the DetNet domain. The regulators inside a DetNet transit node operate with node's local clock. Therefore, when configuring the regulator parameters, the affect of clock inaccuracy should be considered. <xref target="Thomas2020time"/> describes and provides solutions to this issue.
     </t>
 </section>
 
@@ -924,7 +934,6 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     &RFC2212;
 	&RFC6658;
 	&RFC7806;
-    &RFC8578;
     &RFC8655;
     &RFC8939;
     &RFC8964;
@@ -936,7 +945,8 @@ its (flow) regulation constraints; it is released at the earliest time at which 
 	
 <references title="Informative References">
 	
-    
+    &RFC3552;
+    &RFC8578;
 	<reference anchor="IEEE8021Q" target="http://ieeexplore.ieee.org/document/8403927">
         <front>
           <title>IEEE Std 802.1Q-2018: IEEE Standard for Local and metropolitan area networks - Bridges and Bridged Networks</title>
@@ -1029,6 +1039,16 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         </front>
 	</reference>
 	
+    <reference anchor="Thomas2020time" target="https://dl.acm.org/doi/10.1145/3393691.3394206">
+        <front>
+          <title>On Time Synchronization Issues in Time-Sensitive Networks with Regulators and Nonideal Clocks</title>
+          <author>
+            <organization>L. Thomas and J.-Y. Le Boudec</organization>
+          </author>
+          <date />
+        </front>
+    </reference>
+
 	<reference anchor="Specht2016UBS" target="https://ieeexplore.ieee.org/abstract/document/7557870">
         <front>
           <title>Urgency-Based Scheduler for Time-Sensitive Switched Ethernet Networks</title>
