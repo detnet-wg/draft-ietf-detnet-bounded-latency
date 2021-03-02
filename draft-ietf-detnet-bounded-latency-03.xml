@@ -203,7 +203,7 @@
         </t><t>
             <list style="numbers">
                 <t>
-                    Perform any configuration required by the DetNet transit nodes in the network for classes of DetNet flows.
+                    Perform any configuration required by the DetNet transit nodes in the network for aggregates of DetNet flows.
                     This configuration is done beforehand, and not tied to any particular DetNet flow.
                 </t><t>
                     Characterize the new DetNet flow, particularly in terms of required bandwidth.
@@ -211,8 +211,6 @@
                     Establish the path that the DetNet flow will take through the network
                     from the source to the destination(s).  This can be a point-to-point
                     or a point-to-multipoint path.
-                </t><t>
-                    Select a class of DetNet flows for the DetNet flow.
                 </t><t>
                     Compute the worst-case end-to-end latency for the DetNet flow, using one
                     of the methods, below (<xref target="static-calculation"/>,
@@ -769,8 +767,11 @@ its (flow) regulation constraints; it is released at the earliest time at which 
 		<t>
 			At each DetNet transit node implementing an interleaved regulator, packets of multiple flows are processed in one FIFO queue; the packet at the head
 			of the queue is regulated based on its leaky bucket parameters; it is released at the earliest time at which this is possible without violating 
-			the constraint. The regulation parameters for a flow (leaky bucket rate and bucket size) are the same at its source and at all DetNet transit nodes along its path. 
+			the constraint. 
 		</t>
+            <t>
+                The regulation parameters for a flow (leaky bucket rate and bucket size) are the same at its source and at all DetNet transit nodes along its path in the case of that all clocks are perfect. However, in reality there is clock nonideality thoughout the DetNet domain even with clock synchronization. This phenomenon causes inaccuracy in the rates configured at the regulators that may lead to network instability. To avoid that, when configuring the regulators, the rates are set as the source rates with some positive margin. <xref target="Thomas2020time"/> describes and provides solutions to this issue.
+    </t>
         <section title="Delay Bound Calculation" anchor="delayTSNwithATS">
             <t>
                 A delay bound of the queuing subsystem ((4) in <xref target="fig_timing_model"/>) for an AVB flow of classes A or B can be computed if the following condition holds:
@@ -912,9 +913,6 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     </t>
     <t>
         A security consideration for this document is to secure the resource reservation singaling for DetNet flows. Any forge or manipulation of packets during reservation may lead the flow not to be admitted or face delay bound violation. Security mitigation for this issue is describedd in Section 7.6 of <xref target="I-D.ietf-detnet-security"/>.
-    </t>
-    <t>
-        Another consideration is regarding the configuration of regulators is to account for clock inaccuracies thoughout the DetNet domain. The regulators inside a DetNet transit node operate with node's local clock. Therefore, when configuring the regulator parameters, the affect of clock inaccuracy should be considered. <xref target="Thomas2020time"/> describes and provides solutions to this issue.
     </t>
 </section>
 
