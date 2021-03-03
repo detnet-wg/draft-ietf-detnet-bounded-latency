@@ -146,7 +146,7 @@
 <middle>
     
 <section title="Introduction">
-	
+    
     <t>The ability for IETF Deterministic Networking (DetNet) or IEEE 802.1 Time-Sensitive
         Networking (TSN, <xref target="IEEE8021TSN"/>) to provide the DetNet services of bounded latency and zero congestion
         loss depends upon A) configuring and allocating network resources for the exclusive
@@ -191,9 +191,9 @@
 
 <section title="Terminology and Definitions">
     <t>
-	This document uses the terms defined in <xref target="RFC8655"/>.
+    This document uses the terms defined in <xref target="RFC8655"/>.
     </t>
-	
+    
 </section>
 
 <section title="DetNet bounded latency model">
@@ -295,7 +295,7 @@
                 but yield poorer latency and buffer space guarantees than when that same
                 queuing method is used for static DetNet flow creation
                 (<xref target="static-calculation"/>).
-			</t>
+            </t>
         </section>
     </section>
     <section anchor="relay_model" title="Relay node model">
@@ -350,17 +350,17 @@
                     an arbitrary delay can result.</t>
                 <t hangText="4. Processing delay"><vspace blankLines="0"/>
                     This delay covers the time from the reception of the last bit of the packet to the
-					time the packet is enqueued in the regulator (Queuing subsystem, if there is no regulation).
+                    time the packet is enqueued in the regulator (Queuing subsystem, if there is no regulation).
                     This delay can be variable, and depends on the details of the operation of the forwarding node.</t>
-	            <t hangText="5. Regulator delay"><vspace blankLines="0"/>
-	                This is the time spent from the insertion of the last bit of a packet into a regulation queue until the time
-	                the packet is declared eligible according to its regulation constraints. We assume that 
-					this time can be calculated based on the details of regulation policy. If there is no regulation, this time is zero.</t>
+                <t hangText="5. Regulator delay"><vspace blankLines="0"/>
+                    This is the time spent from the insertion of the last bit of a packet into a regulation queue until the time
+                    the packet is declared eligible according to its regulation constraints. We assume that 
+                    this time can be calculated based on the details of regulation policy. If there is no regulation, this time is zero.</t>
                 <t hangText="6. Queuing subsystem delay"><vspace blankLines="0"/>
                     This is the time spent for a packet from being declared eligible until being
-					selected for output on the next link.  We assume that this time is
+                    selected for output on the next link.  We assume that this time is
                     calculable based on the details of the queuing mechanism. If there is no regulation, this time is from the insertion 
-					of the packet into a queue until it is selected for output on the next link.</t>
+                    of the packet into a queue until it is selected for output on the next link.</t>
             </list></t>
             <t>Not shown in <xref target="fig_timing_model"/> are the other output queues that we
                 presume are also attached to that same output port as the queue shown, and against
@@ -389,7 +389,7 @@
         </section>
 </section>
 <section anchor="e2eLatency" title="Computing End-to-end Delay Bounds">
-	<section title="Non-queuing delay bound" anchor="nonqueuing">
+    <section title="Non-queuing delay bound" anchor="nonqueuing">
     <t>End-to-end delay bounds can be computed using the delay model in <xref target="relay_model"/>. Here, it is important
         to be aware that for several queuing mechanisms, the end-to-end delay bound is less than the sum of the
         per-hop delay bounds.
@@ -420,8 +420,8 @@
         mechanisms deployed along the path of this DetNet flow. The computation of queuing_delay_bound 
         is described in <xref target="queuing"/> as a separate section.
     </t>
-	</section>
-	<section title="Queuing delay bound" anchor="queuing">
+    </section>
+    <section title="Queuing delay bound" anchor="queuing">
     <t>
         For several queuing mechanisms, 
         queuing_delay_bound is less than the
@@ -435,36 +435,36 @@
         In such cases, the computation of per-hop queuing delay bounds must account for the fact that the T-SPEC of a DetNet flow is no longer satisfied at
         the ingress of a hop, since burstiness increases as one flow traverses one DetNet transit node.
     </t>
-		<section title="Per-flow queuing mechanisms" anchor="perflow">
-			<t>
-				With such mechanisms, each flow uses a separate queue inside every node. The service for each queue is abstracted with a guaranteed rate and a latency. For every DetNet flow, a per-node delay bound as well as an end-to-end delay bound can be computed from the traffic specification of this DetNet flow at its source and from the values of rates and latencies at all nodes along its path. The per-flow queuing is used in IntServ. Details of calculation for IntServ are described in <xref target="intserv"/>.
-			</t>
-		</section>
+        <section title="Per-flow queuing mechanisms" anchor="perflow">
+            <t>
+                With such mechanisms, each flow uses a separate queue inside every node. The service for each queue is abstracted with a guaranteed rate and a latency. For every DetNet flow, a per-node delay bound as well as an end-to-end delay bound can be computed from the traffic specification of this DetNet flow at its source and from the values of rates and latencies at all nodes along its path. The per-flow queuing is used in IntServ. Details of calculation for IntServ are described in <xref target="intserv"/>.
+            </t>
+        </section>
 
-		<section title="Aggregate queuing mechanisms" anchor="perclass">
-		    <t>
-				With such mechanisms, multiple flows are aggregated into macro-flows and there is one FIFO queue per macro-flow. A practical example is the credit-based shaper defined in section 8.6.8.2 of <xref target="IEEE8021Q"/> where a macro-flow is called a "class".  One key issue in this context is how to deal with the burstiness cascade: individual flows that share a resource dedicated to a macro-flow may see their burstiness increase, which may in turn cause increased burstiness to other flows downstream of this resource. Computing delay upper bounds for such cases is difficult, and in some conditions impossible <xref target="charny2000delay"/><xref target="bennett2002delay"/>. Also, when bounds are obtained, they depend on the complete configuration, and must be recomputed when one flow is added. (The dynamic calculation, <xref target="dynamic-calculation"/>.)
-			</t>
-			<t>
-				A solution to deal with this issue for the DetNet flows is to reshape them at every hop. This can be done with per-flow regulators (e.g. leaky bucket shapers), but this requires per-flow queuing and defeats the purpose of aggregate queuing. An alternative is the interleaved regulator, which reshapes individual DetNet flows without per-flow queuing (<xref target="Specht2016UBS"/>, <xref target="IEEE8021Qcr"/>). With  an interleaved regulator, the packet at the head of the queue is regulated based on
+        <section title="Aggregate queuing mechanisms" anchor="perclass">
+            <t>
+                With such mechanisms, multiple flows are aggregated into macro-flows and there is one FIFO queue per macro-flow. A practical example is the credit-based shaper defined in section 8.6.8.2 of <xref target="IEEE8021Q"/> where a macro-flow is called a "class".  One key issue in this context is how to deal with the burstiness cascade: individual flows that share a resource dedicated to a macro-flow may see their burstiness increase, which may in turn cause increased burstiness to other flows downstream of this resource. Computing delay upper bounds for such cases is difficult, and in some conditions impossible <xref target="charny2000delay"/><xref target="bennett2002delay"/>. Also, when bounds are obtained, they depend on the complete configuration, and must be recomputed when one flow is added. (The dynamic calculation, <xref target="dynamic-calculation"/>.)
+            </t>
+            <t>
+                A solution to deal with this issue for the DetNet flows is to reshape them at every hop. This can be done with per-flow regulators (e.g. leaky bucket shapers), but this requires per-flow queuing and defeats the purpose of aggregate queuing. An alternative is the interleaved regulator, which reshapes individual DetNet flows without per-flow queuing (<xref target="Specht2016UBS"/>, <xref target="IEEE8021Qcr"/>). With  an interleaved regulator, the packet at the head of the queue is regulated based on
 its (flow) regulation constraints; it is released at the earliest time at which this is possible without violating the constraint. One key feature of per-flow or interleaved regulator is that, it does not increase worst-case latency bounds <xref target="le_boudec2018theory"/>. Specifically, when an interleaved regulator is appended to a FIFO subsystem, it does not increase the worst-case delay of the latter. 
-			</t>
-			<t>
-				<xref target="fig_detnet_e2e_example"/> shows an example of a network with 5 nodes, aggregate queuing mechanism and interleaved regulators as in <xref target="fig_timing_model"/>. 
-				An end-to-end delay bound for DetNet flow f, traversing nodes 1 to 5, is calculated as follows:
-			</t>
-			<t>
-		    	<list style="hanging">
-		        	<t> end_to_end_latency_bound_of_flow_f = C12 + C23 + C34 + S4
-		        	</t>
-		    	</list>
-			</t>
-			<t>
-				In the above formula, Cij is a bound on the delay of the queuing subsystem in node i and interleaved regulator of node j, 
-				and S4 is a bound on the delay of the queuing subsystem in node 4 for DetNet flow f. In fact, using the delay definitions in 
-				<xref target="relay_model"/>, Cij is a bound on sum of the delays 1,2,3,6 of node i and 4,5 of node j. Similarly, S4 is a bound on 
-				sum of the delays 1,2,3,6 of node 4. A practical example of queuing model and delay calculation is presented <xref target="TSNwithATSmodel"/>. 
-			</t>
+            </t>
+            <t>
+                <xref target="fig_detnet_e2e_example"/> shows an example of a network with 5 nodes, aggregate queuing mechanism and interleaved regulators as in <xref target="fig_timing_model"/>. 
+                An end-to-end delay bound for DetNet flow f, traversing nodes 1 to 5, is calculated as follows:
+            </t>
+            <t>
+                <list style="hanging">
+                    <t> end_to_end_latency_bound_of_flow_f = C12 + C23 + C34 + S4
+                    </t>
+                </list>
+            </t>
+            <t>
+                In the above formula, Cij is a bound on the delay of the queuing subsystem in node i and interleaved regulator of node j, 
+                and S4 is a bound on the delay of the queuing subsystem in node 4 for DetNet flow f. In fact, using the delay definitions in 
+                <xref target="relay_model"/>, Cij is a bound on sum of the delays 1,2,3,6 of node i and 4,5 of node j. Similarly, S4 is a bound on 
+                sum of the delays 1,2,3,6 of node 4. A practical example of queuing model and delay calculation is presented <xref target="TSNwithATSmodel"/>. 
+            </t>
 <figure title="End-to-end delay computation example" anchor="fig_detnet_e2e_example">
 <artwork align="center"><![CDATA[
             f
@@ -474,13 +474,13 @@ its (flow) regulation constraints; it is released at the earliest time at which 
 +---+   +---+   +---+   +---+   +---+
    \__C12_/\__C23_/\__C34_/\_S4_/
 ]]></artwork>
-		    </figure>
-			<t>
-				REMARK: The end-to-end delay bound calculation provided here gives a much better upper bound in comparison with end-to-end delay bound 
-				computation by adding the delay bounds of each node in the path of a DetNet flow <xref target="TSNwithATS"/>.
-			</t>
-		</section>
-	</section>
+            </figure>
+            <t>
+                REMARK: The end-to-end delay bound calculation provided here gives a much better upper bound in comparison with end-to-end delay bound 
+                computation by adding the delay bounds of each node in the path of a DetNet flow <xref target="TSNwithATS"/>.
+            </t>
+        </section>
+    </section>
     <section title="Ingress considerations" anchor="ingress">
         <t>
             A sender can be a DetNet node which uses exactly the same queuing methods
@@ -583,11 +583,11 @@ its (flow) regulation constraints; it is released at the earliest time at which 
  
  
  <section anchor="queue_model" title="Queuing techniques">
- 	<t>In this section, for simplicity of delay computation, we assume that the T-SPEC or arrival curve <xref target="NetCalBook"/> for each DetNet flow at source is leaky bucket.
- 	 Also, at each Detnet transit node, the service for each queue is abstracted with a guaranteed rate and a latency.</t>
+    <t>In this section, for simplicity of delay computation, we assume that the T-SPEC or arrival curve <xref target="NetCalBook"/> for each DetNet flow at source is leaky bucket.
+     Also, at each Detnet transit node, the service for each queue is abstracted with a guaranteed rate and a latency.</t>
     <section anchor="data_model" title="Queuing data model">
 
-	<t>Sophisticated queuing mechanisms are available in Layer 3 (L3, see, e.g., <xref target="RFC7806"/> for an overview).
+    <t>Sophisticated queuing mechanisms are available in Layer 3 (L3, see, e.g., <xref target="RFC7806"/> for an overview).
         In general, we assume that "Layer 3" queues, shapers, meters, etc., are precisely the "regulators"
         shown in <xref target="fig_timing_model"/>. The "queuing subsystems" in this figure are not the province solely of bridges;
         they are an essential part of any DetNet transit node.  As illustrated by numerous implementation examples, some of the
@@ -685,24 +685,24 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     Only one layer of frame preemption is supported -- a transmitter cannot have more than one
     interrupted frame in progress.  DetNet flows typically pass through the interrupting
     MAC. For those DetNet flows with T-SPEC, latency bound can be 
-	calculated by the methods provided in the following sections that accounts for the affect of frame preemption, according to the specific 
-	queuing mechanism that is used in DetNet nodes. Best-effort queues pass through the 
-	interruptible MAC, and can 	thus be preempted.
-    </t>	
+    calculated by the methods provided in the following sections that accounts for the affect of frame preemption, according to the specific 
+    queuing mechanism that is used in DetNet nodes. Best-effort queues pass through the 
+    interruptible MAC, and can  thus be preempted.
+    </t>    
     </section>
 
     <section anchor="time_schedule_intro" title="Time Aware Shaper">
-		<t>
-			In <xref target="IEEE8021Q"/>, the notion of time-scheduling queue gates is
-			described in section 8.6.8.4. On each node, the transmission selection for packets 
-			is controlled by time-synchronized gates; each output queue is associated with a gate.
-			The gates can be either open or close. The states of the gates are
-			determined by the gate control list (GCL). The GCL specifies the opening and closing
-			times of the gates. The design of GCL should satisfy the requirement of 
-			latency upper bounds of all DetNet flows; therefore, those DetNet flows traverse a 
-			network should have bounded latency, if the traffic and nodes are conformant.
-		</t>
-		<t>
+        <t>
+            In <xref target="IEEE8021Q"/>, the notion of time-scheduling queue gates is
+            described in section 8.6.8.4. On each node, the transmission selection for packets 
+            is controlled by time-synchronized gates; each output queue is associated with a gate.
+            The gates can be either open or close. The states of the gates are
+            determined by the gate control list (GCL). The GCL specifies the opening and closing
+            times of the gates. The design of GCL should satisfy the requirement of 
+            latency upper bounds of all DetNet flows; therefore, those DetNet flows traverse a 
+            network should have bounded latency, if the traffic and nodes are conformant.
+        </t>
+        <t>
             It should be noted that scheduled traffic service relies on a synchronized
             network and coordinated GCL configuration. Synthesis of GCL on multiple
             nodes in network is a scheduling problem considering all DetNet flows
@@ -712,7 +712,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
             priority queues and at least one best effort.
         </t>
     </section>
-	<section anchor="TSNwithATSmodel" title="Credit-Based Shaper with Asynchronous Traffic Shaping">
+    <section anchor="TSNwithATSmodel" title="Credit-Based Shaper with Asynchronous Traffic Shaping">
         <t>
             In the considered queuing model, we considered the four traffic classes (Definition 3.268 of <xref target="IEEE8021Q"/>): 
             <!-- In the considered queuing model, the flows are of four types, namely,  -->
@@ -726,8 +726,8 @@ its (flow) regulation constraints; it is released at the earliest time at which 
             port and per-class; the interleaved regulator is mapped to the regulator depicted in <xref target="fig_timing_model"/>. The detailed picture of scheduling and regulation architecture at a node output port is given by <xref target="fig_TSN_node"/>. The packets received at a node input port for a given class are enqueued in the respective interleaved regulator at the output port.
             Then, the packets from all the flows, including CDT and BE flows, are enqueued in queuing subsytem; there is no regulator for such classes.
         </t>
-		<figure title="The architecture of an output port inside a relay node with interleaved regulators (IRs) and credit-based shaper (CBS)" anchor="fig_TSN_node">
-		<artwork><![CDATA[
+        <figure title="The architecture of an output port inside a relay node with interleaved regulators (IRs) and credit-based shaper (CBS)" anchor="fig_TSN_node">
+        <artwork><![CDATA[
 
       +--+   +--+ +--+   +--+
       |  |   |  | |  |   |  |
@@ -752,120 +752,120 @@ its (flow) regulation constraints; it is released at the earliest time at which 
                                  |
                                  V
         ]]></artwork>
-		</figure>
-		
-		<t>
-			Each of the queuing subsystems for classes A and B, contains Credit-Based Shaper (CBS). The CBS serves a packet from a class according to the available credit
-			for that class. The credit for each class A or B increases based on the idle slope, and decreases based on the send slope, both of which 
-			are parameters of the CBS (Section 8.6.8.2 of <xref target="IEEE8021Q"/>). The CDT and BE0-BE4 flows are served by separate queuing subsystems. Then, packets from all flows are
-			served by a transmission selection subsystem that serves packets from each class based on its priority. All subsystems are non-preemptive.
-			Guarantees for AVB traffic can be provided only if CDT traffic is bounded; it is assumed that the CDT traffic has leaky bucket arrival curve with two parameters r_h as rate and b_h as bucket size, i.e., the amount of bits entering a node within a time interval t is bounded by r_h t + b_h. 
-		</t>
-		<t>
-			Additionally, it is assumed that the AVB flows are also regulated at their source according to leaky bucket arrival curve. At the source, the traffic satisfies its regulation constraint, i.e. the delay due to interleaved regulator at source is ignored.
-		</t>
-		<t>
-			At each DetNet transit node implementing an interleaved regulator, packets of multiple flows are processed in one FIFO queue; the packet at the head
-			of the queue is regulated based on its leaky bucket parameters; it is released at the earliest time at which this is possible without violating 
-			the constraint. 
-		</t>
+        </figure>
+        
+        <t>
+            Each of the queuing subsystems for classes A and B, contains Credit-Based Shaper (CBS). The CBS serves a packet from a class according to the available credit
+            for that class. The credit for each class A or B increases based on the idle slope, and decreases based on the send slope, both of which 
+            are parameters of the CBS (Section 8.6.8.2 of <xref target="IEEE8021Q"/>). The CDT and BE0-BE4 flows are served by separate queuing subsystems. Then, packets from all flows are
+            served by a transmission selection subsystem that serves packets from each class based on its priority. All subsystems are non-preemptive.
+            Guarantees for AVB traffic can be provided only if CDT traffic is bounded; it is assumed that the CDT traffic has leaky bucket arrival curve with two parameters r_h as rate and b_h as bucket size, i.e., the amount of bits entering a node within a time interval t is bounded by r_h t + b_h. 
+        </t>
+        <t>
+            Additionally, it is assumed that the AVB flows are also regulated at their source according to leaky bucket arrival curve. At the source, the traffic satisfies its regulation constraint, i.e. the delay due to interleaved regulator at source is ignored.
+        </t>
+        <t>
+            At each DetNet transit node implementing an interleaved regulator, packets of multiple flows are processed in one FIFO queue; the packet at the head
+            of the queue is regulated based on its leaky bucket parameters; it is released at the earliest time at which this is possible without violating 
+            the constraint. 
+        </t>
             <t>
-                The regulation parameters for a flow (leaky bucket rate and bucket size) are the same at its source and at all DetNet transit nodes along its path in the case of that all clocks are perfect. However, in reality there is clock nonideality thoughout the DetNet domain even with clock synchronization. This phenomenon causes inaccuracy in the rates configured at the regulators that may lead to network instability. To avoid that, when configuring the regulators, the rates are set as the source rates with some positive margin. <xref target="Thomas2020time"/> describes and provides solutions to this issue.
+                The regulation parameters for a flow (leaky bucket rate and bucket size) are the same at its source and at all DetNet transit nodes along its path in the case where all clocks are perfect. However, in reality there is clock nonideality thoughout the DetNet domain even with clock synchronization. This phenomenon causes inaccuracy in the rates configured at the regulators that may lead to network instability. To avoid that, when configuring the regulators, the rates are set as the source rates with some positive margin. <xref target="Thomas2020time"/> describes and provides solutions to this issue.
     </t>
         <section title="Delay Bound Calculation" anchor="delayTSNwithATS">
             <t>
                 A delay bound of the queuing subsystem ((4) in <xref target="fig_timing_model"/>) for an AVB flow of classes A or B can be computed if the following condition holds:
             </t>
-    		<t>
+            <t>
                 <list style="hanging">
-                 	<t> sum of leaky bucket rates of all flows of this class at this transit node &lt;= R, where R is given below for every class.
-    				</t>
-     			</list> 
-    		</t>
-    		<t>If the condition holds, the delay bounds for a flow of class X (A or B) is d_X and calculated as:</t>
-    		<t>
-               	<list style="hanging">
-               		<t> d_X = T_X + (b_t_X-L_min_X)/R_X - L_min_X/c</t>
-    			</list> 
-    		</t>
-    		<t>
-    			where L_min_X is the minimum packet lengths of class X (A or B); c is the output link transmission rate; b_t_X is the sum of the b term (bucket size) for all the flows of the class X. Parameters R_X and T_X are calculated as follows for class A and class B, separately:
-    		</t>
-    		
-    		<t>If the flow is of class A:</t>
-    		<t>
-               <list style="hanging">
-                	<t> R_A = I_A (c-r_h)/ c</t>
-    				<t>T_A = L_nA + b_h + r_h L_n/c)/(c-r_h)</t>
-    			</list> 
-    		</t>
-    		<t>where L_nA is the maximum packet length of class B and BE packets; L_n is the maximum packet length of classes A,B, and BE.</t>
-    		<t>If the flow is of class B:</t>
-    		<t>
-               <list style="hanging">
-               		<t>R_B = I_B (c-r_h)/ c</t>
-    				<t>T_B = (L_BE + L_A + L_nA I_A/(c_h-I_A) + b_h + r_h L_n/c)/(c-r_h)</t>
-    			</list> 
-    		</t>
-    		<t>where L_A is the maximum packet length of class A; L_BE is the maximum packet length of class BE.</t>
-    		<t>Then, an end-to-end delay bound of class X (A or B)is calculated by the formula <xref target="perclass"/>, where for Cij:</t>
-    		<t>
+                    <t> sum of leaky bucket rates of all flows of this class at this transit node &lt;= R, where R is given below for every class.
+                    </t>
+                </list> 
+            </t>
+            <t>If the condition holds, the delay bounds for a flow of class X (A or B) is d_X and calculated as:</t>
+            <t>
                 <list style="hanging">
-                 	<t>Cij = d_X</t>
-     			</list> 
-    		</t>
-    		<t>More information of delay analysis in such a DetNet transit node is described in <xref target="TSNwithATS"/>.</t>
-		</section>
+                    <t> d_X = T_X + (b_t_X-L_min_X)/R_X - L_min_X/c</t>
+                </list> 
+            </t>
+            <t>
+                where L_min_X is the minimum packet lengths of class X (A or B); c is the output link transmission rate; b_t_X is the sum of the b term (bucket size) for all the flows of the class X. Parameters R_X and T_X are calculated as follows for class A and class B, separately:
+            </t>
+            
+            <t>If the flow is of class A:</t>
+            <t>
+               <list style="hanging">
+                    <t> R_A = I_A (c-r_h)/ c</t>
+                    <t>T_A = L_nA + b_h + r_h L_n/c)/(c-r_h)</t>
+                </list> 
+            </t>
+            <t>where L_nA is the maximum packet length of class B and BE packets; L_n is the maximum packet length of classes A,B, and BE.</t>
+            <t>If the flow is of class B:</t>
+            <t>
+               <list style="hanging">
+                    <t>R_B = I_B (c-r_h)/ c</t>
+                    <t>T_B = (L_BE + L_A + L_nA I_A/(c_h-I_A) + b_h + r_h L_n/c)/(c-r_h)</t>
+                </list> 
+            </t>
+            <t>where L_A is the maximum packet length of class A; L_BE is the maximum packet length of class BE.</t>
+            <t>Then, an end-to-end delay bound of class X (A or B)is calculated by the formula <xref target="perclass"/>, where for Cij:</t>
+            <t>
+                <list style="hanging">
+                    <t>Cij = d_X</t>
+                </list> 
+            </t>
+            <t>More information of delay analysis in such a DetNet transit node is described in <xref target="TSNwithATS"/>.</t>
+        </section>
 
 
-		<section title="Flow Admission" anchor="admissionTSNwithATS">
-		    <t> 
-				The delay bound calculation requires some information about each node. For each node, it is required to know the idle slope of CBS for each class A and B (I_A and I_B), as well as the transmission rate of the output link (c). Besides, it is necessary to have the information on each class, i.e. maximum packet length of classes A, B, and BE. Moreover, the leaky bucket parameters of CDT (r_h,b_h) should be known. To admit a flow/flows of classes A and B, their delay requirements should be guaranteed not to be violated. As described in <xref target="flow-admission"/>, the two problems, static and dynamic, are addressed separately. In either of the problems, the rate and delay should be guaranteed. Thus,
-			</t>
-	        <t>
-	            <list hangIndent="8" style="hanging">
-	                <t hangText="The static admission control:"><vspace blankLines="0"/>
-					The leaky bucket parameters of all AVB flows are known, therefore, for each AVB flow f, a delay bound can be calculated. The computed delay bound for every AVB flow should not be more than its delay requirement. Moreover, the sum of the rate of each flow (r_f) should not be more than the rate allocated to each class (R). If these two conditions hold, the configuration is declared admissible.
-	                </t>
-	                <t hangText="The dynamic admission control:"><vspace blankLines="0"/>
-					For dynamic admission control, we allocate to every node and class A or B, static value for rate (R) and maximum burstiness (b_t). In addition, for every node and every class A and B, two counters are maintained: 
-					</t>
-					<t>
-						<list style="hanging">
-							<t>R_acc is equal to the sum of the leaky-bucket rates of all flows of this class already admitted at this node; At all times, we must have:</t>
-							<t><list style="hanging">
-								 <t>R_acc &lt;=R, (Eq. 1)</t>
-							 </list></t>
-							<t>b_acc is equal to the sum of the bucket sizes of all flows of this class already admitted at this node; At all times, we must have:</t>
-							<t><list style="hanging">
-								 <t>b_acc &lt;=b_t.  (Eq. 2)</t>
-							 </list></t>
-						</list>
-					</t>
-					<t>
-					 A new AVB flow is admitted at this node, if Eqs. (1) and (2) continue to be satisfied after adding its leaky bucket rate and bucket size to R_acc and b_acc. An AVB flow is admitted in the network, if it is admitted at all nodes along its path. When this happens, all variables R_acc and b_acc along its path must be incremented to reflect the addition of the flow. Similarly, when an AVB flow leaves the network, all variables R_acc and b_acc along its path must be decremented to reflect the removal of the flow.
-	                </t>
-	            </list>
-	        </t>
-			<t>
-				The choice of the static values of R and b_t at all nodes and classes must be done in a prior configuration phase; R controls the bandwidth allocated to this class at this node, b_t affects the delay bound and the buffer requirement. R must satisfy the constraints given in Annex L.1 of <xref target="IEEE8021Q"/>.
-			</t>
-		</section>
-		
-	</section>
+        <section title="Flow Admission" anchor="admissionTSNwithATS">
+            <t> 
+                The delay bound calculation requires some information about each node. For each node, it is required to know the idle slope of CBS for each class A and B (I_A and I_B), as well as the transmission rate of the output link (c). Besides, it is necessary to have the information on each class, i.e. maximum packet length of classes A, B, and BE. Moreover, the leaky bucket parameters of CDT (r_h,b_h) should be known. To admit a flow/flows of classes A and B, their delay requirements should be guaranteed not to be violated. As described in <xref target="flow-admission"/>, the two problems, static and dynamic, are addressed separately. In either of the problems, the rate and delay should be guaranteed. Thus,
+            </t>
+            <t>
+                <list hangIndent="8" style="hanging">
+                    <t hangText="The static admission control:"><vspace blankLines="0"/>
+                    The leaky bucket parameters of all AVB flows are known, therefore, for each AVB flow f, a delay bound can be calculated. The computed delay bound for every AVB flow should not be more than its delay requirement. Moreover, the sum of the rate of each flow (r_f) should not be more than the rate allocated to each class (R). If these two conditions hold, the configuration is declared admissible.
+                    </t>
+                    <t hangText="The dynamic admission control:"><vspace blankLines="0"/>
+                    For dynamic admission control, we allocate to every node and class A or B, static value for rate (R) and maximum burstiness (b_t). In addition, for every node and every class A and B, two counters are maintained: 
+                    </t>
+                    <t>
+                        <list style="hanging">
+                            <t>R_acc is equal to the sum of the leaky-bucket rates of all flows of this class already admitted at this node; At all times, we must have:</t>
+                            <t><list style="hanging">
+                                 <t>R_acc &lt;=R, (Eq. 1)</t>
+                             </list></t>
+                            <t>b_acc is equal to the sum of the bucket sizes of all flows of this class already admitted at this node; At all times, we must have:</t>
+                            <t><list style="hanging">
+                                 <t>b_acc &lt;=b_t.  (Eq. 2)</t>
+                             </list></t>
+                        </list>
+                    </t>
+                    <t>
+                     A new AVB flow is admitted at this node, if Eqs. (1) and (2) continue to be satisfied after adding its leaky bucket rate and bucket size to R_acc and b_acc. An AVB flow is admitted in the network, if it is admitted at all nodes along its path. When this happens, all variables R_acc and b_acc along its path must be incremented to reflect the addition of the flow. Similarly, when an AVB flow leaves the network, all variables R_acc and b_acc along its path must be decremented to reflect the removal of the flow.
+                    </t>
+                </list>
+            </t>
+            <t>
+                The choice of the static values of R and b_t at all nodes and classes must be done in a prior configuration phase; R controls the bandwidth allocated to this class at this node, b_t affects the delay bound and the buffer requirement. R must satisfy the constraints given in Annex L.1 of <xref target="IEEE8021Q"/>.
+            </t>
+        </section>
+        
+    </section>
 
     <section title="IntServ" anchor="intserv">
         <t>
             Integrated service (IntServ) is an architecture that specifies the elements to guarantee quality of service (QoS) on networks. 
-		</t>
+        </t>
         <t>The flow, at the source, has a leaky bucket arrival curve with two parameters r as rate and b as bucket size, i.e., the amount of bits entering a node within a time interval t is bounded by r t + b. </t>
         <t>If a resource reservation on a path is applied, a node provides a guaranteed rate R and maximum service latency of T. This can be interpreted in a way that the bits might have to wait up to T before being served with a rate greater or equal to R. The delay bound of the flow traversing the node is T + b / R.</t> 
        <t>
             Consider an IntServ path including a sequence of nodes, where the i-th node  provides a guaranteed rate R_i and maximum service latency of T_i. Then, the end-to-end delay bound for a flow on this can be calculated as sum(T_i) + b / min(R_i).
         </t>
-		<t>
-			If more information about the flow is known, e.g. the peak rate, the delay bound is more complicated; the detail is available in Section 1.4.1 of <xref target="NetCalBook"/>.
-		</t>	
+        <t>
+            If more information about the flow is known, e.g. the peak rate, the delay bound is more complicated; the detail is available in Section 1.4.1 of <xref target="NetCalBook"/>.
+        </t>    
     </section>
   <section title="Cyclic Queuing and Forwarding" anchor="cqf">
     <t>
@@ -930,22 +930,22 @@ its (flow) regulation constraints; it is released at the earliest time at which 
 
 <references title="Normative References">
     &RFC2212;
-	&RFC6658;
-	&RFC7806;
+    &RFC6658;
+    &RFC7806;
     &RFC8655;
     &RFC8939;
     &RFC8964;
-	&I-D.ietf-detnet-security;
+    &I-D.ietf-detnet-security;
 
 
-	
+    
 </references>
-	
+    
 <references title="Informative References">
-	
+    
     &RFC3552;
     &RFC8578;
-	<reference anchor="IEEE8021Q" target="http://ieeexplore.ieee.org/document/8403927">
+    <reference anchor="IEEE8021Q" target="http://ieeexplore.ieee.org/document/8403927">
         <front>
           <title>IEEE Std 802.1Q-2018: IEEE Standard for Local and metropolitan area networks - Bridges and Bridged Networks</title>
           <author>
@@ -953,7 +953,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
           </author>
           <date year="2018" />
         </front>
-	</reference>
+    </reference>
 
     <reference anchor="IEEE8021Qcr"
         target="http://www.ieee802.org/1/files/private/cr-drafts/">
@@ -964,7 +964,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
           </author>
           <date year="2017" />
         </front>
-	</reference>
+    </reference>
 
     <reference anchor="IEEE8023" target="http://ieeexplore.ieee.org/document/8457469">
         <front>
@@ -976,7 +976,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         </front>
     </reference>
 
-	<reference anchor="IEEE8021TSN" target="http://www.ieee802.org/1/">
+    <reference anchor="IEEE8021TSN" target="http://www.ieee802.org/1/">
         <front>
           <title>IEEE 802.1 Time-Sensitive Networking (TSN) Task Group</title>
           <author>
@@ -984,10 +984,10 @@ its (flow) regulation constraints; it is released at the earliest time at which 
           </author>
           <date />
         </front>
-	</reference>
+    </reference>
 
-		
-	<reference anchor="TSNwithATS" target="https://arxiv.org/abs/1804.10608/">
+        
+    <reference anchor="TSNwithATS" target="https://arxiv.org/abs/1804.10608/">
         <front>
           <title>End-to-end Latency and Backlog Bounds in Time-Sensitive Networking with Credit Based Shapers and Asynchronous Traffic Shaping</title>
           <author>
@@ -995,7 +995,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
           </author>
           <date />
         </front>
-	</reference>
+    </reference>
     
     <reference anchor="NetCalBook" target="https://ica1www.epfl.ch/PS_files/NetCal.htm">
         <front>
@@ -1005,9 +1005,9 @@ its (flow) regulation constraints; it is released at the earliest time at which 
           </author>
           <date year="2001"/>
         </front>
-	</reference>
+    </reference>
     
-	<reference anchor="le_boudec2018theory" target="https://ieeexplore.ieee.org/document/8519761">
+    <reference anchor="le_boudec2018theory" target="https://ieeexplore.ieee.org/document/8519761">
         <front>
           <title>A Theory of Traffic Regulators for Deterministic Networks with Application to Interleaved Regulators</title>
           <author>
@@ -1015,9 +1015,9 @@ its (flow) regulation constraints; it is released at the earliest time at which 
           </author>
           <date />
         </front>
-	</reference>
-	
-	<reference anchor="charny2000delay" target="https://link.springer.com/chapter/10.1007/3-540-39939-9_1">
+    </reference>
+    
+    <reference anchor="charny2000delay" target="https://link.springer.com/chapter/10.1007/3-540-39939-9_1">
         <front>
           <title>Delay Bounds in a Network with Aggregate Scheduling</title>
           <author>
@@ -1025,9 +1025,9 @@ its (flow) regulation constraints; it is released at the earliest time at which 
           </author>
           <date />
         </front>
-	</reference>
-	
-	<reference anchor="bennett2002delay" target="https://dl.acm.org/citation.cfm?id=581870">
+    </reference>
+    
+    <reference anchor="bennett2002delay" target="https://dl.acm.org/citation.cfm?id=581870">
         <front>
           <title>Delay Jitter Bounds and Packet Scale Rate Guarantee for Expedited Forwarding</title>
           <author>
@@ -1035,8 +1035,8 @@ its (flow) regulation constraints; it is released at the earliest time at which 
           </author>
           <date />
         </front>
-	</reference>
-	
+    </reference>
+    
     <reference anchor="Thomas2020time" target="https://dl.acm.org/doi/10.1145/3393691.3394206">
         <front>
           <title>On Time Synchronization Issues in Time-Sensitive Networks with Regulators and Nonideal Clocks</title>
@@ -1047,7 +1047,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         </front>
     </reference>
 
-	<reference anchor="Specht2016UBS" target="https://ieeexplore.ieee.org/abstract/document/7557870">
+    <reference anchor="Specht2016UBS" target="https://ieeexplore.ieee.org/abstract/document/7557870">
         <front>
           <title>Urgency-Based Scheduler for Time-Sensitive Switched Ethernet Networks</title>
           <author>
@@ -1055,8 +1055,8 @@ its (flow) regulation constraints; it is released at the earliest time at which 
           </author>
           <date />
         </front>
-	</reference>
-	
+    </reference>
+    
 </references>
 
 </back>
