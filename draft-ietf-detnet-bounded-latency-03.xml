@@ -10,10 +10,8 @@
 <!ENTITY RFC8655 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8655.xml">
 <!ENTITY RFC8939 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8939.xml">
 <!ENTITY RFC8964 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8964.xml">
-<!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
 <!ENTITY I-D.ietf-detnet-ip SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-detnet-ip-05.xml">
 <!ENTITY I-D.ietf-detnet-mpls SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-detnet-mpls-05.xml">
-<!ENTITY I-D.ietf-detnet-security SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-detnet-security-13.xml">
 ]>
 
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -153,8 +151,7 @@
         use of DetNet flows; B) identifying, in the data plane, the
         resources to be utilized by any given packet, and C) the detailed behavior
         of those resources, especially transmission queue selection, so that
-        latency bounds can be reliably assured.  Thus, DetNet is an example of an
-        IntServ Guaranteed Quality of Service <xref target="RFC2212"/>
+        latency bounds can be reliably assured.
     </t><t>
         As explained in <xref target="RFC8655"/>, DetNet
         flows are characterized by 1) a maximum bandwidth, guaranteed either by the
@@ -163,24 +160,24 @@
         in turn, provides the opportunity for the network to supply enough buffer
         space to guarantee zero congestion loss.
     </t><t>
-        To be of use to the applications identified in
+        To be used by the applications identified in
         <xref target="RFC8578"/>, it must be possible to calculate,
         before the transmission of a DetNet flow commences, both the worst-case
         end-to-end network latency, and the amount of buffer space required at each hop to
         ensure against congestion loss.
     </t><t>
-        This document references specific queuing mechanisms, defined in other documents, that can be
+        This document references specific queuing mechanisms, defined in <xref target="RFC8655"/>, that can be
         used to control packet transmission at each output port and achieve the DetNet
         qualities of service.
         This document presents a timing model for sources, destinations, and the
         DetNet transit nodes that relay packets that is applicable to all of those referenced
-        queuing mechanisms.
+        queuing mechanisms. It furthermore provides end-to-end delay bound and backlog computations for such mechanisms that can be used by the control plane to provide DetNet QoS.
     </t><t>
         Using the model presented in this document, it should be possible for an
         implementor, user, or standards development organization to select
         a particular set of queuing mechanisms for each device in a DetNet network,
         and to select a resource reservation algorithm for that network, so that
-        those elements can work together to provide the DetNet service.
+        those elements can work together to provide the DetNet service. <xref target="example"/> provides an example application of this document to a DetNet IP network with combination of different queuing mechanisms.
     </t><t>
         This document does not specify any resource reservation protocol or server.
         It does not describe all of the requirements for that protocol or server.
@@ -597,7 +594,8 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         needed in a network carrying both DetNet flows and non-DetNet flows.
     </t>
     <t><xref target="fig_8021Q_data_model"/> shows the general model for the flow of packets through
-    the queues of a DetNet transit node. The DetNet packets are mapped to a number of regulators. All Packets are assigned to a set of queues.  Queues compete for the selection of packets
+    the queues of a DetNet transit node. The DetNet packets are mapped to a number of regulators. Here, we assume that the PREOF functions are performed before the DetNet packets enter the regulators.
+     All Packets are assigned to a set of queues.  Queues compete for the selection of packets
     to be passed to queues in the queuing subsystem. Packets again are selected for output from the
     queuing subsystem.
     </t>
@@ -770,7 +768,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
             the constraint. 
         </t>
             <t>
-                The regulation parameters for a flow (leaky bucket rate and bucket size) are the same at its source and at all DetNet transit nodes along its path in the case where all clocks are perfect. However, in reality there is clock nonideality thoughout the DetNet domain even with clock synchronization. This phenomenon causes inaccuracy in the rates configured at the regulators that may lead to network instability. To avoid that, when configuring the regulators, the rates are set as the source rates with some positive margin. <xref target="Thomas2020time"/> describes and provides solutions to this issue.
+                The regulation parameters for a flow (leaky bucket rate and bucket size) are the same at its source and at all DetNet transit nodes along its path in the case of that all clocks are perfect. However, in reality there is clock nonideality thoughout the DetNet domain even with clock synchronization. This phenomenon causes inaccuracy in the rates configured at the regulators that may lead to network instability. To avoid that, when configuring the regulators, the rates are set as the source rates with some positive margin. <xref target="Thomas2020time"/> describes and provides solutions to this issue.
     </t>
         <section title="Delay Bound Calculation" anchor="delayTSNwithATS">
             <t>
@@ -856,7 +854,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
 
     <section title="IntServ" anchor="intserv">
         <t>
-            Integrated service (IntServ) is an architecture that specifies the elements to guarantee quality of service (QoS) on networks. 
+            Integrated service (IntServ) is an architecture that specifies the elements to guarantee quality of service (QoS) on networks <xref target="RFC2212"/>. 
         </t>
         <t>The flow, at the source, has a leaky bucket arrival curve with two parameters r as rate and b as bucket size, i.e., the amount of bits entering a node within a time interval t is bounded by r t + b. </t>
         <t>If a resource reservation on a path is applied, a node provides a guaranteed rate R and maximum service latency of T. This can be interpreted in a way that the bits might have to wait up to T before being served with a rate greater or equal to R. The delay bound of the flow traversing the node is T + b / R.</t> 
@@ -904,6 +902,62 @@ its (flow) regulation constraints; it is released at the earliest time at which 
   </section>
  </section>
 
+<section title="Example application on DetNet IP network" anchor="example">
+    <t>
+        This section provides an example application of this document on a DetNet-enabled IP network. Consider <xref target="fig_ip_detnet_simple"/>, taken from Section 3 of <xref target="RFC8939"/>, that shows a simple IP network:
+    </t>
+    <t>
+        <list style="symbols">
+            <t>
+                The end-system 1 implements IntServ as in <xref target="intserv"/> between itself and relay node 1.
+            </t>
+            <t>
+                Sub-network 1 is a TSN network. The nodes in subnetwork 1 implement credit-based shapers with asynchronous traffic shaping as in <xref target="TSNwithATSmodel"/>.
+            </t>
+            <t>
+                Sub-network 2 is a TSN network. The nodes in subnetwork 2 implement cyclic queuing and forwarding with two buffers as in <xref target="cqf"/>.
+            </t>
+            <t>
+                The relay nodes 1 and 2 implement credit-based shapers with asynchronous traffic shaping as in <xref target="TSNwithATSmodel"/>. They also perform the aggregation and mapping of IP DetNet flows to TSN streams (Section 4.4 of <xref target="I-D.ietf-detnet-ip-over-tsn"/>).
+            </t>
+        </list>
+    </t>
+
+      <figure title="A Simple DetNet-Enabled IP Network, taken from RFC8939" anchor="fig_ip_detnet_simple">
+        <artwork><![CDATA[
+ DetNet IP       Relay                        Relay       DetNet IP
+ End-System      Node 1                       Node 2      End-System
+     1                                                        2
++----------+                                             +----------+
+|   Appl.  |<------------ End-to-End Service ----------->|   Appl.  |
++----------+  ............                 ...........   +----------+
+| Service  |<-: Service  :-- DetNet flow --: Service  :->| Service  |
++----------+  +----------+                 +----------+  +----------+
+|Forwarding|  |Forwarding|                 |Forwarding|  |Forwarding|
++--------.-+  +-.------.-+                 +-.---.----+  +-------.--+
+         : Link :       \      ,-----.      /     \   ,-----.   /
+         +......+        +----[  Sub- ]----+       +-[  Sub- ]-+
+                              [Network]              [Network]
+                               `--1--'                `--2--'
+
+         |<--------------------- DetNet IP --------------------->|
+             
+|<--- d1 --->|<--------------- d2 --------------->|<-- d3 -->|        
+                         ]]></artwork>
+      </figure>
+
+
+<t>Consider a fully centeralized control plane for the network of <xref target="fig_ip_detnet_simple"/> as described in Section 3.2 of <xref target="I-D.ietf-detnet-controller-plane-framework"/>. Suppose end-system 1 wants to create a DetNet flow destined to end-system 2 with end-to-end delay bound requirement D. Therefore, the control plane receives a flow establishment request and calculates a number of valid paths through the network (Section 3.2 of <xref target="I-D.ietf-detnet-controller-plane-framework"/>). To select a proper path, the control plane needs to compute an end-to-end delay bound at every node of each selected path p. 
+</t>
+<t>
+    The end-to-end delay bound is d1 + d2_p + d3_p, where d1 is the delay bound from end-system 1 to the entrance of relay node 1, d2_p is the delay bound for path p from relay node 1 to entrance of the first node in sub-network 2, and d3_p the delay bound of path p from the first node in sub-network 2 to end-system 2. The computation of d1 is explained in <xref target="intserv"/>. Since the relay node 1, sub-network 1 and relay node 2 implement aggregate queuing, we use the results in <xref target="perclass"/> and <xref target="TSNwithATSmodel"/> to compute d2_p for the path p. Finally, d3_p is computed using the delay bound computation of <xref target="cqf"/>. Any path p such that d1 + d2_p + d3_p &le; D satisfies the delay bound requirement of the flow. If there is no such path, the control plane may compute new set of valid paths and redo the delay bound computation or do not admit the DetNet flow.
+</t>
+<t>
+    As soon as the control plane selected a path that satisfies the delay bound constraint, it allocates and reserves the resources in the path for the DetNet flow (Section 4.2 <xref target="I-D.ietf-detnet-controller-plane-framework"/>).
+</t>
+
+</section>
+
 <section title="Security considerations">
     <t>
     Detailed security considerations for DetNet are cataloged in <xref target="I-D.ietf-detnet-security"/>, and more general security considerations are described in <xref target="RFC8655"/>.
@@ -912,7 +966,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         Security aspects that are unique to DetNet are those whose aim is to provide the specific QoS aspects of DetNet, specifically bounded end-to-end delivery latency and zero congestion loss. Achieving such loss rates and bounded latency may not be possible in the face of a highly capable adversary, such as the one envisioned by the Internet Threat Model of BCP 72 <xref target="RFC3552"/> that can arbitrarily drop or delay any or all traffic. In order to present meaningful security considerations, we consider a somewhat weaker attacker who does not control the physical links of the DetNet domain but may have the ability to control a network node within the boundary of the DetNet domain.
     </t>
     <t>
-        A security consideration for this document is to secure the resource reservation singaling for DetNet flows. Any forge or manipulation of packets during reservation may lead the flow not to be admitted or face delay bound violation. Security mitigation for this issue is describedd in Section 7.6 of <xref target="I-D.ietf-detnet-security"/>.
+        A security consideration for this document is to secure the resource reservation signaling for DetNet flows. Any forge or manipulation of packets during reservation may lead the flow not to be admitted or face delay bound violation. Security mitigation for this issue is describedd in Section 7.6 of <xref target="I-D.ietf-detnet-security"/>.
     </t>
 </section>
 
@@ -929,22 +983,51 @@ its (flow) regulation constraints; it is released at the earliest time at which 
 <back>
 
 <references title="Normative References">
-    &RFC2212;
-    &RFC6658;
-    &RFC7806;
-    &RFC8655;
-    &RFC8939;
-    &RFC8964;
-    &I-D.ietf-detnet-security;
+    <?rfc include='reference.RFC.2212.xml'?>
+    <?rfc include='reference.RFC.6658.xml'?>
+    <?rfc include='reference.RFC.7806.xml'?>
+    <?rfc include='reference.RFC.8655.xml'?>
+    <?rfc include='reference.RFC.8939.xml'?>
+    <?rfc include='reference.RFC.8964.xml'?>
+    <!-- <?rfc include='reference.I-D.ietf-detnet-security.xml'?> -->
+    <reference anchor="I-D.ietf-detnet-security" target="https://tools.ietf.org/html/draft-ietf-detnet-security-14">
+        <front>
+          <title>Deterministic Networking (DetNet) Security Considerations draft-ietf-detnet-security-14</title>
+          <author>
+            <organization>E. Grossman, T. Mizrahi, and A. Hacker</organization>
+          </author>
+          <date />
+        </front>
+    </reference>
 
 
     
 </references>
     
 <references title="Informative References">
-    
-    &RFC3552;
-    &RFC8578;
+    <!-- <?rfc include='reference.I-D.ietf-detnet-controller-plane-framework.xml'?> -->
+    <reference anchor="I-D.ietf-detnet-controller-plane-framework" target="https://datatracker.ietf.org/doc/html/draft-ietf-detnet-controller-plane-framework">
+        <front>
+          <title>Deterministic Networking (DetNet) Controller Plane Framework draft-ietf-detnet-controller-plane-framework-00</title>
+          <author>
+            <organization>A. Malis, X. Geng, M. Chen, F. Qin, and B. Varga</organization>
+          </author>
+          <date />
+        </front>
+    </reference>
+    <!-- <?rfc include='reference.I-D.ietf-detnet-ip-over-tsn.xml'?> -->
+    <reference anchor="I-D.ietf-detnet-ip-over-tsn" target="https://datatracker.ietf.org/doc/html/draft-ietf-detnet-ip-over-tsn-07">
+        <front>
+          <title>DetNet Data Plane: IP over IEEE 802.1 Time Sensitive Networking (TSN) draft-ietf-detnet-ip-over-tsn-07</title>
+          <author>
+            <organization>B. Varga, J. Farkas, A. Malis, and S. Bryant</organization>
+          </author>
+          <date />
+        </front>
+    </reference>
+    <?rfc include='reference.RFC.3552.xml'?>
+    <?rfc include='reference.RFC.8578.xml'?>
+    <!-- &I-D.draft-malis-detnet-controller-plane-framework; -->
     <reference anchor="IEEE8021Q" target="http://ieeexplore.ieee.org/document/8403927">
         <front>
           <title>IEEE Std 802.1Q-2018: IEEE Standard for Local and metropolitan area networks - Bridges and Bridged Networks</title>
