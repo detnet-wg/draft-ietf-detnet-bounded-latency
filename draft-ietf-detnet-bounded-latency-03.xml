@@ -171,7 +171,7 @@
         qualities of service.
         This document presents a timing model for sources, destinations, and the
         DetNet transit nodes that relay packets that is applicable to all of those referenced
-        queuing mechanisms. It furthermore provides end-to-end delay bound and backlog computations for such mechanisms that can be used by the control plane to provide DetNet QoS.
+        queuing mechanisms. It furthermore provides end-to-end delay bound and backlog bound computations for such mechanisms that can be used by the control plane to provide DetNet QoS.
     </t><t>
         Using the model presented in this document, it should be possible for an
         implementor, user, or standards development organization to select
@@ -179,8 +179,8 @@
         and to select a resource reservation algorithm for that network, so that
         those elements can work together to provide the DetNet service. <xref target="example"/> provides an example application of this document to a DetNet IP network with combination of different queuing mechanisms.
     </t><t>
-        This document does not specify any resource reservation protocol or server.
-        It does not describe all of the requirements for that protocol or server.
+        This document does not specify any resource reservation protocol or control plane function.
+        It does not describe all of the requirements for that protocol or control plane function.
         It does describe requirements for such resource reservation methods,
         and for queuing mechanisms that, if met, will enable them to work together.
     </t>
@@ -223,7 +223,7 @@
         </t>
         <t>
             This paradigm can be implemented using peer-to-peer protocols or using a
-            central server.  In some situations, a lack of resources can require
+            central controller.  In some situations, a lack of resources can require
             backtracking and recursing through this list.
         </t><t>
             Issues such as service preemption of a DetNet flow in favor of another, when
@@ -594,7 +594,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         needed in a network carrying both DetNet flows and non-DetNet flows.
     </t>
     <t><xref target="fig_8021Q_data_model"/> shows the general model for the flow of packets through
-    the queues of a DetNet transit node. The DetNet packets are mapped to a number of regulators. Here, we assume that the PREOF functions are performed before the DetNet packets enter the regulators.
+    the queues of a DetNet transit node. The DetNet packets are mapped to a number of regulators. Here, we assume that the PREOF (Packet Replication, Elimination and Ordering Functions) functions are performed before the DetNet packets enter the regulators.
      All Packets are assigned to a set of queues.  Queues compete for the selection of packets
     to be passed to queues in the queuing subsystem. Packets again are selected for output from the
     queuing subsystem.
@@ -685,7 +685,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     MAC. For those DetNet flows with T-SPEC, latency bound can be 
     calculated by the methods provided in the following sections that accounts for the affect of frame preemption, according to the specific 
     queuing mechanism that is used in DetNet nodes. Best-effort queues pass through the 
-    interruptible MAC, and can  thus be preempted.
+    interruptible MAC, and can thus be preempted.
     </t>    
     </section>
 
@@ -942,18 +942,18 @@ its (flow) regulation constraints; it is released at the earliest time at which 
 
          |<--------------------- DetNet IP --------------------->|
              
-|<--- d1 --->|<--------------- d2 --------------->|<-- d3 -->|        
+|<--- d1 --->|<--------------- d2_p --------------->|<-- d3_p -->|        
                          ]]></artwork>
       </figure>
 
 
-<t>Consider a fully centeralized control plane for the network of <xref target="fig_ip_detnet_simple"/> as described in Section 3.2 of <xref target="I-D.ietf-detnet-controller-plane-framework"/>. Suppose end-system 1 wants to create a DetNet flow destined to end-system 2 with end-to-end delay bound requirement D. Therefore, the control plane receives a flow establishment request and calculates a number of valid paths through the network (Section 3.2 of <xref target="I-D.ietf-detnet-controller-plane-framework"/>). To select a proper path, the control plane needs to compute an end-to-end delay bound at every node of each selected path p. 
+<t>Consider a fully centeralized control plane for the network of <xref target="fig_ip_detnet_simple"/> as described in Section 3.2 of <xref target="I-D.ietf-detnet-controller-plane-framework"/>. Suppose end-system 1 wants to create a DetNet flow with traffic specification destined to end-system 2 with end-to-end delay bound requirement D. Therefore, the control plane receives a flow establishment request and calculates a number of valid paths through the network (Section 3.2 of <xref target="I-D.ietf-detnet-controller-plane-framework"/>). To select a proper path, the control plane needs to compute an end-to-end delay bound at every node of each selected path p. 
 </t>
 <t>
     The end-to-end delay bound is d1 + d2_p + d3_p, where d1 is the delay bound from end-system 1 to the entrance of relay node 1, d2_p is the delay bound for path p from relay node 1 to entrance of the first node in sub-network 2, and d3_p the delay bound of path p from the first node in sub-network 2 to end-system 2. The computation of d1 is explained in <xref target="intserv"/>. Since the relay node 1, sub-network 1 and relay node 2 implement aggregate queuing, we use the results in <xref target="perclass"/> and <xref target="TSNwithATSmodel"/> to compute d2_p for the path p. Finally, d3_p is computed using the delay bound computation of <xref target="cqf"/>. Any path p such that d1 + d2_p + d3_p &le; D satisfies the delay bound requirement of the flow. If there is no such path, the control plane may compute new set of valid paths and redo the delay bound computation or do not admit the DetNet flow.
 </t>
 <t>
-    As soon as the control plane selected a path that satisfies the delay bound constraint, it allocates and reserves the resources in the path for the DetNet flow (Section 4.2 <xref target="I-D.ietf-detnet-controller-plane-framework"/>).
+    As soon as the control plane selects a path that satisfies the delay bound constraint, it allocates and reserves the resources in the path for the DetNet flow (Section 4.2 <xref target="I-D.ietf-detnet-controller-plane-framework"/>).
 </t>
 
 </section>
