@@ -897,6 +897,11 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         The cycle length T_c should be carefully chosen; it needs to be large enough to accomodate all the DetNet traffic, plus at least one maximum interfering packet, that can be received within one cycle. Also, the value of T_c includes a time interval, called dead time (DT), which is the sum of the delays 1,2,3,4 defined in <xref target="fig_timing_model"/>. The value of DT guarantees that the last packet of one cycle in a node is fully delivered to a buffer of the next node is the same cycle. A two-buffer CQF is recommended if DT is small compared to T_c. For a large DT, CQF with more buffers can be used.
      </t>
      <t>
+         Moreover, due to the variation in output delay, link delay and clock accuracy delay,  it might be difficult for a CQF forwarding node to distinguish the last packets in the previous cycle and the first packets in the next cycle, 
+especially when the cycle resource is highly utilized. To resolve this problem, a packet can carry a cycle label or time stamp which identifies which cycle the packet belongs with <xref target="mcqf"/><xref target="dip"/>. 
+The queuing mechanism, packet format and per-hop behavior related to cycle labels are defined in other documents and may need further study and standardization.
+     </t>
+     <t>
          Ingress conditioning (Section 4.3) may be required if the source of a DetNet flow does not, itself, employ CQF. Since there are no per-flow parameters in the CQF technique, per-hop configuration is not required in the CQF forwarding nodes.
      </t>
   </section>
@@ -1125,6 +1130,26 @@ its (flow) regulation constraints; it is released at the earliest time at which 
           <title>On Time Synchronization Issues in Time-Sensitive Networks with Regulators and Nonideal Clocks</title>
           <author>
             <organization>L. Thomas and J.-Y. Le Boudec</organization>
+          </author>
+          <date />
+        </front>
+    </reference>
+    
+    <reference anchor="mcqf" target="https://www.ieee802.org/1/files/public/docs2019/df-finn-multiple-CQF-0919-v01.pdf">
+        <front>
+          <title>Multiple Cyclic Queuing and Forwarding</title>
+          <author>
+            <organization>N. Finn</organization>
+          </author>
+          <date />
+        </front>
+    </reference>
+    
+    <reference anchor="dip" target="https://datatracker.ietf.org/doc/draft-qiang-detnet-large-scale-detnet">
+        <front>
+          <title>MLarge-Scale Deterministic IP Network</title>
+          <author>
+            <organization>L. Qiang, X.Geng, B. Liu, T. Eckert, L. Geng and G. Li</organization>
           </author>
           <date />
         </front>
