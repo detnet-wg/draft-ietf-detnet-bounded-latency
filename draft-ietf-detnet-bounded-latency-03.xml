@@ -898,11 +898,11 @@ its (flow) regulation constraints; it is released at the earliest time at which 
      </t>
      <t>
          Moreover, due to the variation in output delay, link delay and clock accuracy delay,  it might be difficult for a CQF forwarding node to distinguish the last packets in the previous cycle and the first packets in the next cycle, 
-especially when the cycle resource is highly utilized. To resolve this problem, a packet can carry a cycle label or time stamp which identifies which cycle the packet belongs with <xref target="mcqf"/><xref target="dip"/>. 
+especially when the cycle resource is highly utilized. To resolve this problem, a packet can carry a cycle label or time stamp which identifies which cycle the packet belongs with <xref target="MultipleCQF"/><xref target="LargeScaleDetNet"/>. 
 The queuing mechanism, packet format and per-hop behavior related to cycle labels are defined in other documents and may need further study and standardization.
      </t>
      <t>
-         Ingress conditioning (Section 4.3) may be required if the source of a DetNet flow does not, itself, employ CQF. Since there are no per-flow parameters in the CQF technique, per-hop configuration is not required in the CQF forwarding nodes.
+         Ingress conditioning (<xref target="ingress"/>) may be required if the source of a DetNet flow does not, itself, employ CQF. Since there are no per-flow parameters in the CQF technique, per-hop configuration is not required in the CQF forwarding nodes.
      </t>
   </section>
  </section>
@@ -1135,19 +1135,19 @@ The queuing mechanism, packet format and per-hop behavior related to cycle label
         </front>
     </reference>
     
-    <reference anchor="mcqf" target="https://www.ieee802.org/1/files/public/docs2019/df-finn-multiple-CQF-0919-v01.pdf">
+    <reference anchor="MultipleCQF" target="https://www.ieee802.org/1/files/public/docs2019/df-finn-multiple-CQF-0919-v01.pdf">
         <front>
           <title>Multiple Cyclic Queuing and Forwarding</title>
           <author>
             <organization>N. Finn</organization>
           </author>
-          <date />
+          <date year="2019" />
         </front>
     </reference>
     
-    <reference anchor="dip" target="https://datatracker.ietf.org/doc/draft-qiang-detnet-large-scale-detnet">
+    <reference anchor="LargeScaleDetNet" target="https://datatracker.ietf.org/doc/draft-qiang-detnet-large-scale-detnet">
         <front>
-          <title>MLarge-Scale Deterministic IP Network</title>
+          <title>Large-Scale Deterministic IP Network</title>
           <author>
             <organization>L. Qiang, X.Geng, B. Liu, T. Eckert, L. Geng and G. Li</organization>
           </author>
