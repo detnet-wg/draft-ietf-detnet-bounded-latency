@@ -863,7 +863,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
             Consider a Guaranteed-Service IntServ path including a sequence of nodes, where the i-th node  provides a guaranteed rate R_i and maximum service latency of T_i. Then, the end-to-end delay bound for a flow on this can be calculated as sum(T_i) + b / min(R_i).
         </t>
         <t>
-            The provided delay bound is based on only a guaranteed rate and maximum service latency and leaky bucket arrival curve. If more information about the flow is known, e.g. the peak rate, the delay bound is more complicated; the detail is available in <xref target="RFC2212"/> and Section 1.4.1 of <xref target="NetCalBook"/> and .
+            The provided delay bound is based on a simple case of Guaranteed-Service IntServ where only a guaranteed rate and maximum service latency and a leaky bucket arrival curve are available. If more information about the flow is known, e.g. the peak rate, the delay bound is more complicated; the detail is available in <xref target="RFC2212"/> and Section 1.4.1 of <xref target="NetCalBook"/>.
         </t>    
     </section>
   <section title="Cyclic Queuing and Forwarding" anchor="cqf">
