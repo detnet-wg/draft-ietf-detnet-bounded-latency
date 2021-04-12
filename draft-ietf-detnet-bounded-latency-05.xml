@@ -434,7 +434,7 @@
     </t>
         <section title="Per-flow queuing mechanisms" anchor="perflow">
             <t>
-                With such mechanisms, each flow uses a separate queue inside every node. The service for each queue is abstracted with a guaranteed rate and a latency. For every DetNet flow, a per-node delay bound as well as an end-to-end delay bound can be computed from the traffic specification of this DetNet flow at its source and from the values of rates and latencies at all nodes along its path. The per-flow queuing is used in IntServ. Details of calculation for IntServ are described in <xref target="intserv"/>.
+                With such mechanisms, each flow uses a separate queue inside every node. The service for each queue is abstracted with a guaranteed rate and a latency. For every DetNet flow, a per-node delay bound as well as an end-to-end delay bound can be computed from the traffic specification of this DetNet flow at its source and from the values of rates and latencies at all nodes along its path. The per-flow queuing is used in Guaranteed-Service IntServ. Details of calculation for Guaranteed-Service IntServ are described in <xref target="intserv"/>.
             </t>
         </section>
 
@@ -853,17 +853,17 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         
     </section>
 
-    <section title="IntServ" anchor="intserv">
+    <section title="Guaranteed-Service IntServ" anchor="intserv">
         <t>
-            Integrated service (IntServ) is an architecture that specifies the elements to guarantee quality of service (QoS) on networks <xref target="RFC2212"/>. 
+            Guaranteed-Service Integrated service (IntServ) is an architecture that specifies the elements to guarantee quality of service (QoS) on networks <xref target="RFC2212"/>.
         </t>
         <t>The flow, at the source, has a leaky bucket arrival curve with two parameters r as rate and b as bucket size, i.e., the amount of bits entering a node within a time interval t is bounded by r t + b. </t>
         <t>If a resource reservation on a path is applied, a node provides a guaranteed rate R and maximum service latency of T. This can be interpreted in a way that the bits might have to wait up to T before being served with a rate greater or equal to R. The delay bound of the flow traversing the node is T + b / R.</t> 
        <t>
-            Consider an IntServ path including a sequence of nodes, where the i-th node  provides a guaranteed rate R_i and maximum service latency of T_i. Then, the end-to-end delay bound for a flow on this can be calculated as sum(T_i) + b / min(R_i).
+            Consider a Guaranteed-Service IntServ path including a sequence of nodes, where the i-th node  provides a guaranteed rate R_i and maximum service latency of T_i. Then, the end-to-end delay bound for a flow on this can be calculated as sum(T_i) + b / min(R_i).
         </t>
         <t>
-            If more information about the flow is known, e.g. the peak rate, the delay bound is more complicated; the detail is available in Section 1.4.1 of <xref target="NetCalBook"/>.
+            The provided delay bound is based on only a guaranteed rate and maximum service latency and leaky bucket arrival curve. If more information about the flow is known, e.g. the peak rate, the delay bound is more complicated; the detail is available in <xref target="RFC2212"/> and Section 1.4.1 of <xref target="NetCalBook"/> and .
         </t>    
     </section>
   <section title="Cyclic Queuing and Forwarding" anchor="cqf">
@@ -910,7 +910,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     <t>
         <list style="symbols">
             <t>
-                The end-system 1 implements IntServ as in <xref target="intserv"/> between itself and relay node 1.
+                The end-system 1 implements Guaranteed-Service IntServ as in <xref target="intserv"/> between itself and relay node 1.
             </t>
             <t>
                 Sub-network 1 is a TSN network. The nodes in subnetwork 1 implement credit-based shapers with asynchronous traffic shaping as in <xref target="TSNwithATSmodel"/>.
