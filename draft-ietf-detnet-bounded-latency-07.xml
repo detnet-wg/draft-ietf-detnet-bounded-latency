@@ -442,11 +442,11 @@
 
         <section title="Aggregate queuing mechanisms" anchor="perclass">
             <t>
-                With such mechanisms, multiple flows are aggregated into macro-flows and there is one FIFO queue per macro-flow. A practical example is the credit-based shaper defined in section 8.6.8.2 of <xref target="IEEE8021Q"/> where a macro-flow is called a "class".  One key issue in this context is how to deal with the burstiness cascade: individual flows that share a resource dedicated to a macro-flow may see their burstiness increase, which may in turn cause increased burstiness to other flows downstream of this resource. Computing delay upper bounds for such cases is difficult, and in some conditions impossible <xref target="charny2000delay"/><xref target="bennett2002delay"/>. Also, when bounds are obtained, they depend on the complete configuration, and must be recomputed when one flow is added. (The dynamic calculation, <xref target="dynamic-calculation"/>.)
+                With such mechanisms, multiple flows are aggregated into macro-flows and there is one FIFO queue per macro-flow. A practical example is the credit-based shaper defined in section 8.6.8.2 of <xref target="IEEE8021Q"/> where a macro-flow is called a "class".  One key issue in this context is how to deal with the burstiness cascade: individual flows that share a resource dedicated to a macro-flow may see their burstiness increase, which may in turn cause increased burstiness to other flows downstream of this resource. Computing delay upper bounds for such cases is difficult, and in some conditions impossible <xref target="CharnyDelay"/><xref target="BennettDelay"/>. Also, when bounds are obtained, they depend on the complete configuration, and must be recomputed when one flow is added. (The dynamic calculation, <xref target="dynamic-calculation"/>.)
             </t>
             <t>
-                A solution to deal with this issue for the DetNet flows is to reshape them at every hop. This can be done with per-flow regulators (e.g. leaky bucket shapers), but this requires per-flow queuing and defeats the purpose of aggregate queuing. An alternative is the interleaved regulator, which reshapes individual DetNet flows without per-flow queuing (<xref target="Specht2016UBS"/>, <xref target="IEEE8021Qcr"/>). With  an interleaved regulator, the packet at the head of the queue is regulated based on
-its (flow) regulation constraints; it is released at the earliest time at which this is possible without violating the constraint. One key feature of per-flow or interleaved regulator is that, it does not increase worst-case latency bounds <xref target="le_boudec2018theory"/>. Specifically, when an interleaved regulator is appended to a FIFO subsystem, it does not increase the worst-case delay of the latter. 
+                A solution to deal with this issue for the DetNet flows is to reshape them at every hop. This can be done with per-flow regulators (e.g. leaky bucket shapers), but this requires per-flow queuing and defeats the purpose of aggregate queuing. An alternative is the interleaved regulator, which reshapes individual DetNet flows without per-flow queuing (<xref target="SpechtUBS"/>, <xref target="IEEE8021Qcr"/>). With  an interleaved regulator, the packet at the head of the queue is regulated based on
+its (flow) regulation constraints; it is released at the earliest time at which this is possible without violating the constraint. One key feature of per-flow or interleaved regulator is that, it does not increase worst-case latency bounds <xref target="LeBoudecTheory"/>. Specifically, when an interleaved regulator is appended to a FIFO subsystem, it does not increase the worst-case delay of the latter. 
             </t>
             <t>
                 <xref target="fig_detnet_e2e_example"/> shows an example of a network with 5 nodes, aggregate queuing mechanism and interleaved regulators as in <xref target="fig_timing_model"/>. 
@@ -543,19 +543,12 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     must be computed during resource reservation. This bound depends on the set of flows that use these queues,
     the details of the specific queuing mechanism and an 
     upper bound on the processing delay (4). The queue must contain the packet in transmission plus all other packets that
-    are waiting to be selected for output.
-    </t>
-    <t>
-    A conservative backlog  bound, that applies to all systems, can be derived as follows.  
+    are waiting to be selected for output. A conservative backlog  bound, that applies to all systems, can be derived as follows.  
     </t>
     
     <t>
     The backlog bound is counted in data units (bytes, or words of multiple bytes) that are relevant for buffer allocation.
     For every flow or an aggregate of flows, we need one buffer space for the packet in transmission, plus space for the packets that are waiting to be selected for output.
-    [EM: remove the next sentence; it talks about waiting time of packets inside a node.]
-    Excluding transmission and frame preemption times, the packets are waiting in the queue since reception of the last bit, for a duration
-    equal to the processing delay (4) plus the queuing delays (5,6). 
-    [minor: English does not parse here]
     </t>
     <t>Let 
     <list style="symbols">
@@ -705,7 +698,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
             network and coordinated GCL configuration. Synthesis of GCL on multiple
             nodes in network is a scheduling problem considering all DetNet flows
             traversing the network, which is a non-deterministic polynomial-time hard
-            (NP-hard) problem [minor: ideally provide reference to proof] [EM: <xref target="scheduling_qbv"/>]. Also, at this writing, scheduled traffic service
+            (NP-hard) problem <xref target="Sch8021Qbv"/>. Also, at this writing, scheduled traffic service
             supports no more than eight traffic queues, typically using up to seven
             priority queues and at least one best effort.
         </t>
@@ -768,7 +761,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
             the constraint. 
         </t>
             <t>
-                The regulation parameters for a flow (leaky bucket rate and bucket size) are the same at its source and at all DetNet transit nodes along its path in the case of that all clocks are perfect. However, in reality there is clock nonideality thoughout the DetNet domain even with clock synchronization. This phenomenon causes inaccuracy in the rates configured at the regulators that may lead to network instability. To avoid that, when configuring the regulators, the rates are set as the source rates with some positive margin. <xref target="Thomas2020time"/> describes and provides solutions to this issue.
+                The regulation parameters for a flow (leaky bucket rate and bucket size) are the same at its source and at all DetNet transit nodes along its path in the case of that all clocks are perfect. However, in reality there is clock nonideality thoughout the DetNet domain even with clock synchronization. This phenomenon causes inaccuracy in the rates configured at the regulators that may lead to network instability. To avoid that, when configuring the regulators, the rates are set as the source rates with some positive margin. <xref target="ThomasTime"/> describes and provides solutions to this issue.
     </t>
         <section title="Delay Bound Calculation" anchor="delayTSNwithATS">
             <t>
@@ -1094,7 +1087,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         </front>
     </reference>
     
-    <reference anchor="le_boudec2018theory" target="https://ieeexplore.ieee.org/document/8519761">
+    <reference anchor="LeBoudecTheory" target="https://ieeexplore.ieee.org/document/8519761">
         <front>
           <title>A Theory of Traffic Regulators for Deterministic Networks with Application to Interleaved Regulators</title>
           <author>
@@ -1104,7 +1097,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         </front>
     </reference>
 
-    <reference anchor="scheduling_qbv" target="https://dl.acm.org/doi/10.1145/2997465.2997470">
+    <reference anchor="Sch8021Qbv" target="https://dl.acm.org/doi/10.1145/2997465.2997470">
         <front>
           <title>Scheduling Real-Time Communication in IEEE 802.1Qbv Time Sensitive Networks</title>
           <author>
@@ -1114,7 +1107,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         </front>
     </reference>
     
-    <reference anchor="charny2000delay" target="https://link.springer.com/chapter/10.1007/3-540-39939-9_1">
+    <reference anchor="CharnyDelay" target="https://link.springer.com/chapter/10.1007/3-540-39939-9_1">
         <front>
           <title>Delay Bounds in a Network with Aggregate Scheduling</title>
           <author>
@@ -1124,7 +1117,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         </front>
     </reference>
     
-    <reference anchor="bennett2002delay" target="https://dl.acm.org/citation.cfm?id=581870">
+    <reference anchor="BennettDelay" target="https://dl.acm.org/citation.cfm?id=581870">
         <front>
           <title>Delay Jitter Bounds and Packet Scale Rate Guarantee for Expedited Forwarding</title>
           <author>
@@ -1134,7 +1127,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         </front>
     </reference>
     
-    <reference anchor="Thomas2020time" target="https://dl.acm.org/doi/10.1145/3393691.3394206">
+    <reference anchor="ThomasTime" target="https://dl.acm.org/doi/10.1145/3393691.3394206">
         <front>
           <title>On Time Synchronization Issues in Time-Sensitive Networks with Regulators and Nonideal Clocks</title>
           <author>
@@ -1144,7 +1137,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
         </front>
     </reference>
 
-    <reference anchor="Specht2016UBS" target="https://ieeexplore.ieee.org/abstract/document/7557870">
+    <reference anchor="SpechtUBS" target="https://ieeexplore.ieee.org/abstract/document/7557870">
         <front>
           <title>Urgency-Based Scheduler for Time-Sensitive Switched Ethernet Networks</title>
           <author>
