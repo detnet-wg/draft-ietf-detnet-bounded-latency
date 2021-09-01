@@ -955,13 +955,13 @@ its (flow) regulation constraints; it is released at the earliest time at which 
 
 <section title="Security considerations">
     <t>
-    Detailed security considerations for DetNet are cataloged in <xref target="I-D.ietf-detnet-security"/>, and more general security considerations are described in <xref target="RFC8655"/>.
+    Detailed security considerations for DetNet are cataloged in <xref target="RFC9055"/>, and more general security considerations are described in <xref target="RFC8655"/>.
     </t>
     <t>
         Security aspects that are unique to DetNet are those whose aim is to provide the specific QoS aspects of DetNet, specifically bounded end-to-end delivery latency and zero congestion loss. Achieving such loss rates and bounded latency may not be possible in the face of a highly capable adversary, such as the one envisioned by the Internet Threat Model of BCP 72 <xref target="RFC3552"/> that can arbitrarily drop or delay any or all traffic. In order to present meaningful security considerations, we consider a somewhat weaker attacker who does not control the physical links of the DetNet domain but may have the ability to control a network node within the boundary of the DetNet domain.
     </t>
     <t>
-        A security consideration for this document is to secure the resource reservation signaling for DetNet flows. Any forge or manipulation of packets during reservation may lead the flow not to be admitted or face delay bound violation. Security mitigation for this issue is describedd in Section 7.6 of <xref target="I-D.ietf-detnet-security"/>.
+        A security consideration for this document is to secure the resource reservation signaling for DetNet flows. Any forge or manipulation of packets during reservation may lead the flow not to be admitted or face delay bound violation. Security mitigation for this issue is describedd in Section 7.6 of <xref target="RFC9055"/>.
     </t>
 </section>
 
@@ -985,7 +985,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     <?rfc include='reference.RFC.8655.xml'?>
     <?rfc include='reference.RFC.8939.xml'?>
     <?rfc include='reference.RFC.8964.xml'?>
-    <!-- <?rfc include='reference.I-D.ietf-detnet-security.xml'?> -->
+    <!-- <?rfc include='reference.RFC9055.xml'?> -->
     
     
 </references>
@@ -994,7 +994,8 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     <?rfc include='reference.RFC.2697.xml'?>
     <?rfc include='reference.RFC.3552.xml'?>
     <?rfc include='reference.RFC.8578.xml'?>
-    <reference anchor="I-D.ietf-detnet-security" target="https://datatracker.ietf.org/doc/draft-ietf-detnet-security/">
+    <?rfc include='reference.RFC.9055.xml'?>
+    <!-- <reference anchor="I-D.ietf-detnet-security" target="https://datatracker.ietf.org/doc/draft-ietf-detnet-security/">
         <front>
           <title>Deterministic Networking (DetNet) Security Considerations draft-ietf-detnet-security-16</title>
           <author>
@@ -1002,7 +1003,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
           </author>
           <date />
         </front>
-    </reference>
+    </reference> -->
     
     <!-- <?rfc include='reference.I-D.ietf-detnet-controller-plane-framework.xml'?> -->
     <reference anchor="I-D.ietf-detnet-controller-plane-framework" target="https://datatracker.ietf.org/doc/html/draft-ietf-detnet-controller-plane-framework">
