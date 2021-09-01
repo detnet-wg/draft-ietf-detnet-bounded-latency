@@ -10,6 +10,7 @@
 <!ENTITY RFC8655 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8655.xml">
 <!ENTITY RFC8939 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8939.xml">
 <!ENTITY RFC8964 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8964.xml">
+<!ENTITY RFC9023 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.9023.xml">
 <!ENTITY I-D.ietf-detnet-ip SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-detnet-ip-05.xml">
 <!ENTITY I-D.ietf-detnet-mpls SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-detnet-mpls-05.xml">
 ]>
@@ -913,7 +914,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
                 Sub-network 2 is a TSN network. The nodes in subnetwork 2 implement cyclic queuing and forwarding with two buffers as in <xref target="cqf"/>.
             </t>
             <t>
-                The relay nodes 1 and 2 implement credit-based shapers with asynchronous traffic shaping as in <xref target="TSNwithATSmodel"/>. They also perform the aggregation and mapping of IP DetNet flows to TSN streams (Section 4.4 of <xref target="I-D.ietf-detnet-ip-over-tsn"/>).
+                The relay nodes 1 and 2 implement credit-based shapers with asynchronous traffic shaping as in <xref target="TSNwithATSmodel"/>. They also perform the aggregation and mapping of IP DetNet flows to TSN streams (Section 4.4 of <xref target="RFC9023"/>).
             </t>
         </list>
     </t>
@@ -995,15 +996,7 @@ its (flow) regulation constraints; it is released at the earliest time at which 
     <?rfc include='reference.RFC.3552.xml'?>
     <?rfc include='reference.RFC.8578.xml'?>
     <?rfc include='reference.RFC.9055.xml'?>
-    <!-- <reference anchor="I-D.ietf-detnet-security" target="https://datatracker.ietf.org/doc/draft-ietf-detnet-security/">
-        <front>
-          <title>Deterministic Networking (DetNet) Security Considerations draft-ietf-detnet-security-16</title>
-          <author>
-            <organization>E. Grossman, T. Mizrahi, and A. Hacker</organization>
-          </author>
-          <date />
-        </front>
-    </reference> -->
+    <?rfc include='reference.RFC.9023.xml'?>
     
     <!-- <?rfc include='reference.I-D.ietf-detnet-controller-plane-framework.xml'?> -->
     <reference anchor="I-D.ietf-detnet-controller-plane-framework" target="https://datatracker.ietf.org/doc/html/draft-ietf-detnet-controller-plane-framework">
@@ -1011,16 +1004,6 @@ its (flow) regulation constraints; it is released at the earliest time at which 
           <title>Deterministic Networking (DetNet) Controller Plane Framework draft-ietf-detnet-controller-plane-framework-00</title>
           <author>
             <organization>A. Malis, X. Geng, M. Chen, F. Qin, and B. Varga</organization>
-          </author>
-          <date />
-        </front>
-    </reference>
-    <!-- <?rfc include='reference.I-D.ietf-detnet-ip-over-tsn.xml'?> -->
-    <reference anchor="I-D.ietf-detnet-ip-over-tsn" target="https://datatracker.ietf.org/doc/html/draft-ietf-detnet-ip-over-tsn-07">
-        <front>
-          <title>DetNet Data Plane: IP over IEEE 802.1 Time Sensitive Networking (TSN) draft-ietf-detnet-ip-over-tsn-07</title>
-          <author>
-            <organization>B. Varga, J. Farkas, A. Malis, and S. Bryant</organization>
           </author>
           <date />
         </front>
